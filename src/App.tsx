@@ -1,13 +1,7 @@
-import Tile from "./Tile";
+import Mosaic from "./Mosaic";
 
 function App() {
-  let tiles: Array<JSX.Element> = [];
-
-  for (let tileId = 0; tileId <= 13; tileId++) {
-    tiles.push(<Tile key={tileId} id={tileId} size={70} />);
-  }
-
-  return <>{tiles}</>;
+  return <Mosaic columns={10} rows={5} tileSize={70} />;
 }
 
 export default App;
