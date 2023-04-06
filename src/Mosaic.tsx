@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Tile from "./Tile";
 
 interface MosaicProps {
@@ -7,10 +8,26 @@ interface MosaicProps {
 }
 
 export default function Mosaic({ columns, rows, tileSize }: MosaicProps) {
-  let tiles: Array<JSX.Element> = [];
+  let [grid, setGrid] = useState(
+    Array<number | null>(columns * rows).fill(null)
+  );
 
-  for (let tileId = 0; tileId <= 13; tileId++) {
-    tiles.push(<Tile key={tileId} id={tileId} size={tileSize} />);
+  let emptyCells: Array<number> = [];
+  grid.forEach((cell, index) => {
+    if (cell === null) {
+      emptyCells.push(index);
+    }
+  });
+
+  function handleClick() {
+    const pick = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    if (pick === undefined) return;
+
+    const tileId = Math.floor(Math.random() * 14);
+
+    let nextGrid = grid.slice();
+    nextGrid[pick] = tileId;
+    setGrid(nextGrid);
   }
 
   const gridStyle: React.CSSProperties = {
@@ -22,8 +39,25 @@ export default function Mosaic({ columns, rows, tileSize }: MosaicProps) {
 
   return (
     <>
-      <div>{tiles}</div>
-      <div style={gridStyle}></div>
+      <div style={gridStyle} onClick={handleClick}>
+        {grid.map((tileId, index) => {
+          const rowStart = Math.floor(index / columns) + 1;
+          const colStart = (index % columns) + 1;
+
+          const cellStyle: React.CSSProperties = {
+            backgroundColor: "lightgray",
+            gridArea: `${rowStart} / ${colStart} / ${rowStart + 1} / ${
+              colStart + 1
+            }`,
+          };
+
+          return (
+            <span style={cellStyle}>
+              {tileId === null ? null : <Tile id={tileId} size={tileSize} />}
+            </span>
+          );
+        })}
+      </div>
     </>
   );
 }
