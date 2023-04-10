@@ -19,9 +19,30 @@ export default function Mosaic({ columns, rows, tileSize }: MosaicProps) {
     }
   });
 
+  function getNeighborsId(cellIndex: number) {
+    const rowOffset = Math.floor(cellIndex / columns) * columns;
+    const tilesAmount = rows * columns;
+
+    const rightId = grid[((cellIndex + 1) % columns) + rowOffset];
+    const topId = grid[(cellIndex - columns + tilesAmount) % tilesAmount];
+    const leftId = grid[((cellIndex + columns - 1) % columns) + rowOffset];
+    const bottomId = grid[(cellIndex + columns) % tilesAmount];
+
+    return [rightId, topId, leftId, bottomId];
+  }
+
   function handleClick() {
     const pick = emptyCells[Math.floor(Math.random() * emptyCells.length)];
     if (pick === undefined) return;
+
+    const [rightId, topId, leftId, bottomId] = getNeighborsId(pick);
+    console.table({
+      "Index of collapsed cell": pick,
+      "Right Neighbor ID": rightId,
+      "Top Neighbor ID": topId,
+      "Left Neighbor ID": leftId,
+      "Bottom Neighbor ID": bottomId,
+    });
 
     const tileId = Math.floor(Math.random() * 14);
 
