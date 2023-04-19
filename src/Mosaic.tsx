@@ -12,12 +12,9 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
 
   let tileOptions = tilesetData.map((_, index) => index);
   let gridOptions: number[][] = grid.map(() => tileOptions);
-  let emptyCells: number[] = [];
+
   grid.forEach((cellTileId, cellIndex) => {
-    if (cellTileId === null) {
-      emptyCells.push(cellIndex);
-      return;
-    }
+    if (cellTileId === null) return;
 
     gridOptions[cellIndex] = [];
     limitNeighborsOptions(cellIndex);
@@ -78,13 +75,35 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
   }
 
   function handleClick() {
-    const pick = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    if (pick === undefined) return;
+    let leastOptions = tilesetData.length;
+    gridOptions.forEach((cellOptions) => {
+      if (cellOptions.length !== 0 && cellOptions.length < leastOptions) {
+        leastOptions = cellOptions.length;
+      }
+    });
 
-    const tileId = Math.floor(Math.random() * 14);
+    interface cellData {
+      index: number;
+      options: number[];
+    }
+    let cellsLeastOptions: cellData[] = [];
+    gridOptions.forEach((options, index) => {
+      const cellData: cellData = { index, options };
+      if (options.length === leastOptions) cellsLeastOptions.push(cellData);
+    });
+
+    const randomCell = Math.floor(Math.random() * cellsLeastOptions.length);
+    const selectedCell = cellsLeastOptions[randomCell];
+
+    if (selectedCell === undefined) {
+      let nextGrid = grid.slice().fill(null);
+      setGrid(nextGrid);
+      return;
+    }
 
     let nextGrid = grid.slice();
-    nextGrid[pick] = tileId;
+    const randomTile = Math.floor(Math.random() * selectedCell.options.length);
+    nextGrid[selectedCell.index] = selectedCell.options[randomTile];
     setGrid(nextGrid);
   }
 
