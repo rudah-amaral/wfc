@@ -2,15 +2,13 @@ import { useState } from "react";
 import Tile from "./Tile";
 
 interface MosaicProps {
-  columns: number;
+  cols: number;
   rows: number;
   tileSize: number;
 }
 
-export default function Mosaic({ columns, rows, tileSize }: MosaicProps) {
-  let [grid, setGrid] = useState(
-    Array<number | null>(columns * rows).fill(null)
-  );
+export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
+  let [grid, setGrid] = useState(Array<number | null>(cols * rows).fill(null));
 
   let emptyCells: Array<number> = [];
   grid.forEach((cell, index) => {
@@ -20,13 +18,13 @@ export default function Mosaic({ columns, rows, tileSize }: MosaicProps) {
   });
 
   function getNeighborsId(cellIndex: number) {
-    const rowOffset = Math.floor(cellIndex / columns) * columns;
-    const tilesAmount = rows * columns;
+    const rowOffset = Math.floor(cellIndex / cols) * columns;
+    const tilesAmount = rows * cols;
 
-    const rightId = grid[((cellIndex + 1) % columns) + rowOffset];
-    const topId = grid[(cellIndex - columns + tilesAmount) % tilesAmount];
-    const leftId = grid[((cellIndex + columns - 1) % columns) + rowOffset];
-    const bottomId = grid[(cellIndex + columns) % tilesAmount];
+    const rightId = grid[((cellIndex + 1) % cols) + rowOffset];
+    const topId = grid[(cellIndex - cols + tilesAmount) % tilesAmount];
+    const leftId = grid[((cellIndex + cols - 1) % columns) + rowOffset];
+    const bottomId = grid[(cellIndex + cols) % tilesAmount];
 
     return [rightId, topId, leftId, bottomId];
   }
@@ -55,15 +53,15 @@ export default function Mosaic({ columns, rows, tileSize }: MosaicProps) {
     display: "grid",
     width: "min-content",
     gridTemplateRows: `repeat(${rows}, ${tileSize}px)`,
-    gridTemplateColumns: `repeat(${columns}, ${tileSize}px)`,
+    gridTemplateColumns: `repeat(${cols}, ${tileSize}px)`,
   };
 
   return (
     <>
       <div style={gridStyle} onClick={handleClick}>
         {grid.map((tileId, index) => {
-          const rowStart = Math.floor(index / columns) + 1;
-          const colStart = (index % columns) + 1;
+          const rowStart = Math.floor(index / cols) + 1;
+          const colStart = (index % cols) + 1;
 
           const cellStyle: React.CSSProperties = {
             backgroundColor: "lightgray",
