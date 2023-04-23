@@ -1,17 +1,16 @@
+const tilesPath = import.meta.glob<string>("./circuit-tileset/*.png", {
+  import: "default",
+  eager: true,
+});
+
 interface TileProps {
   id: number;
   size: number;
 }
 
 export default function Tile({ id, size }: TileProps) {
-  return (
-    <img
-      src={`${import.meta.env.BASE_URL}circuit-tileset/${id}.png`}
-      alt={`${id}.png`}
-      width={size}
-      height={size}
-    />
-  );
+  const tilePath = tilesPath[`./circuit-tileset/${id}.png`];
+  return <img src={tilePath} width={size} height={size} />;
 }
 
 export const tilesetData = [
