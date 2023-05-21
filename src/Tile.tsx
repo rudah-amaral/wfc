@@ -6,40 +6,87 @@ const tilesPath = import.meta.glob<string>("./circuit-tileset/*.png", {
 interface TileProps {
   id: number;
   size: number;
+  rotations: number;
 }
 
-export default function Tile({ id, size }: TileProps) {
+export default function Tile({ id, size, rotations }: TileProps) {
+  rotations = rotations % 4;
   const tilePath = tilesPath[`./circuit-tileset/${id}.png`];
-  return <img src={tilePath} width={size} height={size} />;
+  const tileStyles: React.CSSProperties = {
+    rotate: `-${0.25 * rotations}turn`,
+  };
+  return <img src={tilePath} width={size} height={size} style={tileStyles} />;
 }
 
-export const tilesetData = [
+export const tilesetProperties = [
   // Tile 0
-  ["ACA", "ABA", "ACA", "ABA"],
+  {
+    edges: ["ACA", "ABA", "ACA", "ABA"],
+    maxRotations: 1,
+  },
   // Tile 1
-  ["DDD", "DDD", "DDD", "DDD"],
+  {
+    edges: ["DDD", "DDD", "DDD", "DDD"],
+    maxRotations: 0,
+  },
   // Tile 2
-  ["DAA", "ABA", "AAD", "DDD"],
+  {
+    edges: ["DAA", "ABA", "AAD", "DDD"],
+    maxRotations: 3,
+  },
   // Tile 3
-  ["AAA", "AAA", "AAD", "DAA"],
+  {
+    edges: ["AAA", "AAA", "AAD", "DAA"],
+    maxRotations: 3,
+  },
   // Tile 4
-  ["ABA", "ABA", "ABA", "ABA"],
+  {
+    edges: ["ABA", "ABA", "ABA", "ABA"],
+    maxRotations: 1,
+  },
   // Tile 5
-  ["ABA", "ABA", "AAA", "AAA"],
+  {
+    edges: ["ABA", "ABA", "AAA", "AAA"],
+    maxRotations: 3,
+  },
   // Tile 6
-  ["AAA", "AAA", "AAA", "AAA"],
+  {
+    edges: ["AAA", "AAA", "AAA", "AAA"],
+    maxRotations: 0,
+  },
   // Tile 7
-  ["ABA", "AAA", "ABA", "ABA"],
+  {
+    edges: ["ABA", "AAA", "ABA", "ABA"],
+    maxRotations: 3,
+  },
   // Tile 8
-  ["AAA", "ABA", "AAA", "ABA"],
+  {
+    edges: ["AAA", "ABA", "AAA", "ABA"],
+    maxRotations: 1,
+  },
   // Tile 9
-  ["AAA", "ACA", "AAA", "ABA"],
+  {
+    edges: ["AAA", "ACA", "AAA", "ABA"],
+    maxRotations: 3,
+  },
   // Tile 10
-  ["ABA", "ABA", "AAA", "AAA"],
+  {
+    edges: ["ABA", "ABA", "AAA", "AAA"],
+    maxRotations: 3,
+  },
   // Tile 11
-  ["ABA", "AAA", "ABA", "AAA"],
+  {
+    edges: ["ABA", "AAA", "ABA", "AAA"],
+    maxRotations: 1,
+  },
   // Tile 12
-  ["AAA", "ABA", "AAA", "AAA"],
+  {
+    edges: ["AAA", "ABA", "AAA", "AAA"],
+    maxRotations: 3,
+  },
   // Tile 13
-  ["ACA", "AAA", "ACA", "AAA"],
+  {
+    edges: ["ACA", "AAA", "ACA", "AAA"],
+    maxRotations: 1,
+  },
 ];
