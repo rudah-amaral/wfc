@@ -34,25 +34,25 @@ function rotateTile(tile: string[], rotations: number) {
 const cellOptions = tiles.map((_, tileIndex) => tileIndex);
 
 export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
-  let [grid, setGrid] = useState(Array<number | null>(cols * rows).fill(null));
-  let gridOptions: number[][] = grid.map(() => [...cellOptions]);
+  const gridOptions = Array(cols * rows)
+    .fill(null)
+    .map(() => [...cellOptions]);
+  let [grid, setGrid] = useState(gridOptions.slice());
 
-  grid.forEach((tileIndex, cellIndex) => {
-    if (tileIndex === null) return;
-
-    gridOptions[cellIndex] = [];
+  grid.forEach((tileOptions, cellIndex) => {
+    if (tileOptions.length !== 1) return;
     limitNeighborsOptions(cellIndex);
   });
 
   function limitNeighborsOptions(cellIndex: number) {
-    const tileIndex = grid[cellIndex] as number;
-    const currentTile = tiles[tileIndex];
+    const currentTileIndex = grid[cellIndex][0];
+    const currentTile = tiles[currentTileIndex];
     const neighborsIndexes = getNeighborsIndexes(cellIndex);
 
     for (let neighborWay = 0; neighborWay < 4; neighborWay++) {
       let neighborIndex = neighborsIndexes[neighborWay];
-      let neighborTileIndex = grid[neighborIndex];
-      if (neighborTileIndex !== null) continue;
+      let neighborOptions = grid[neighborIndex];
+      if (neighborOptions.length <= 1) continue;
 
       const currentEdge = currentTile.edges[neighborWay];
       limitCellsOptions(neighborIndex, neighborWay, currentEdge);
@@ -74,12 +74,12 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
   function limitCellsOptions(cellIndex: number, cellWay: number, edge: string) {
     edge = reverseString(edge);
     const targetWay = (cellWay + 2) % 4;
-    gridOptions[cellIndex].forEach((cellOption) => {
-      const possibleTile = tiles[cellOption];
+    grid[cellIndex].forEach((tileOption) => {
+      const possibleTile = tiles[tileOption];
       const possibleEdge = possibleTile.edges[targetWay];
       const edgesNotCompatible = edge !== possibleEdge;
 
-      if (edgesNotCompatible) rejectTile(cellIndex, cellOption);
+      if (edgesNotCompatible) rejectTile(cellIndex, tileOption);
     });
   }
 
@@ -90,18 +90,18 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
   }
 
   function rejectTile(cellIndex: number, rejectedTile: number) {
-    const cellOptions = gridOptions[cellIndex].slice();
-    const rejectedTileIndex = cellOptions.indexOf(rejectedTile);
+    const tileOptions = grid[cellIndex].slice();
+    const rejectedTileIndex = tileOptions.indexOf(rejectedTile);
 
-    cellOptions.splice(rejectedTileIndex, 1);
-    gridOptions[cellIndex] = cellOptions;
+    tileOptions.splice(rejectedTileIndex, 1);
+    grid[cellIndex] = tileOptions;
   }
 
   function handleClick() {
     let leastOptions = tiles.length;
-    gridOptions.forEach((cellOptions) => {
-      if (cellOptions.length !== 0 && cellOptions.length < leastOptions) {
-        leastOptions = cellOptions.length;
+    grid.forEach((tileOptions) => {
+      if (tileOptions.length > 1 && tileOptions.length < leastOptions) {
+        leastOptions = tileOptions.length;
       }
     });
 
@@ -110,24 +110,23 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
       options: number[];
     }
     let cellsLeastOptions: cellData[] = [];
-    gridOptions.forEach((options, index) => {
-      if (options.length === leastOptions) {
-        cellsLeastOptions.push({ index, options });
+    grid.forEach((tileOptions, index) => {
+      if (tileOptions.length === leastOptions) {
+        cellsLeastOptions.push({ index, options: tileOptions });
       }
     });
+
+    if (cellsLeastOptions.length === 0) {
+      setGrid(gridOptions.slice());
+      return;
+    }
 
     const randomCell = Math.floor(Math.random() * cellsLeastOptions.length);
     const selectedCell = cellsLeastOptions[randomCell];
 
-    if (selectedCell === undefined) {
-      let nextGrid = grid.slice().fill(null);
-      setGrid(nextGrid);
-      return;
-    }
-
     let nextGrid = grid.slice();
     const randomTile = Math.floor(Math.random() * selectedCell.options.length);
-    nextGrid[selectedCell.index] = selectedCell.options[randomTile];
+    nextGrid[selectedCell.index] = [selectedCell.options[randomTile]];
     setGrid(nextGrid);
   }
 
@@ -141,7 +140,7 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
   return (
     <>
       <div style={gridStyle} onClick={handleClick}>
-        {grid.map((tileIndex, index) => {
+        {grid.map((tileOptions, index) => {
           const rowStart = Math.floor(index / cols) + 1;
           const colStart = (index % cols) + 1;
 
@@ -154,12 +153,12 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
 
           return (
             <span style={cellStyle}>
-              {tileIndex === null ? (
-                gridOptions[index].length
+              {tileOptions.length !== 1 ? (
+                tileOptions.length
               ) : (
                 <Tile
-                  id={tiles[tileIndex].baseTileId}
-                  rotations={tiles[tileIndex].rotations}
+                  id={tiles[tileOptions[0]].baseTileId}
+                  rotations={tiles[tileOptions[0]].rotations}
                   size={tileSize}
                 />
               )}
