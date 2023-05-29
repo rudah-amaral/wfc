@@ -39,64 +39,6 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     .map(() => [...cellOptions]);
   let [grid, setGrid] = useState(gridOptions.slice());
 
-  grid.forEach((tileOptions, cellIndex) => {
-    if (tileOptions.length !== 1) return;
-    limitNeighborsOptions(cellIndex);
-  });
-
-  function limitNeighborsOptions(cellIndex: number) {
-    const currentTileIndex = grid[cellIndex][0];
-    const currentTile = tiles[currentTileIndex];
-    const neighborsIndexes = getNeighborsIndexes(cellIndex);
-
-    for (let neighborWay = 0; neighborWay < 4; neighborWay++) {
-      let neighborIndex = neighborsIndexes[neighborWay];
-      let neighborOptions = grid[neighborIndex];
-      if (neighborOptions.length <= 1) continue;
-
-      const currentEdge = currentTile.edges[neighborWay];
-      limitCellsOptions(neighborIndex, neighborWay, currentEdge);
-    }
-  }
-
-  function getNeighborsIndexes(cellIndex: number) {
-    const rowOffset = Math.floor(cellIndex / cols) * cols;
-    const rightIndex = ((cellIndex + 1) % cols) + rowOffset;
-    const leftIndex = ((cellIndex + cols - 1) % cols) + rowOffset;
-
-    const tilesAmount = rows * cols;
-    const bottomIndex = (cellIndex + cols) % tilesAmount;
-    const topIndex = (cellIndex - cols + tilesAmount) % tilesAmount;
-
-    return [rightIndex, topIndex, leftIndex, bottomIndex];
-  }
-
-  function limitCellsOptions(cellIndex: number, cellWay: number, edge: string) {
-    edge = reverseString(edge);
-    const targetWay = (cellWay + 2) % 4;
-    grid[cellIndex].forEach((tileOption) => {
-      const possibleTile = tiles[tileOption];
-      const possibleEdge = possibleTile.edges[targetWay];
-      const edgesNotCompatible = edge !== possibleEdge;
-
-      if (edgesNotCompatible) rejectTile(cellIndex, tileOption);
-    });
-  }
-
-  function reverseString(string: string) {
-    let stringArray = string.split("");
-    stringArray.reverse();
-    return stringArray.join("");
-  }
-
-  function rejectTile(cellIndex: number, rejectedTile: number) {
-    const tileOptions = grid[cellIndex].slice();
-    const rejectedTileIndex = tileOptions.indexOf(rejectedTile);
-
-    tileOptions.splice(rejectedTileIndex, 1);
-    grid[cellIndex] = tileOptions;
-  }
-
   function handleClick() {
     let leastOptions = tiles.length;
     grid.forEach((tileOptions) => {
@@ -124,10 +66,93 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     const randomCell = Math.floor(Math.random() * cellsLeastOptions.length);
     const selectedCell = cellsLeastOptions[randomCell];
 
-    let nextGrid = grid.slice();
+    const nextGrid = grid.slice();
     const randomTile = Math.floor(Math.random() * selectedCell.options.length);
     nextGrid[selectedCell.index] = [selectedCell.options[randomTile]];
     setGrid(nextGrid);
+
+    nextGrid.forEach((tileOptions, cellIndex, grid) => {
+      if (tileOptions.length !== 1) return;
+
+      const currentTileIndex = tileOptions[0];
+      const currentTile = tiles[currentTileIndex];
+      limitNeighborsOptions(grid, cellIndex, currentTile);
+    });
+  }
+
+  function limitNeighborsOptions(
+    grid: number[][],
+    cellIndex: number,
+    currentTile: tileData
+  ) {
+    const neighborsIndexes = getNeighborsIndexes(cellIndex);
+    for (let neighborWay = 0; neighborWay < 4; neighborWay++) {
+      let neighborIndex = neighborsIndexes[neighborWay];
+      let neighborOptions = grid[neighborIndex];
+      if (neighborOptions.length <= 1) continue;
+
+      const currentEdge = currentTile.edges[neighborWay];
+      limitCellsOptions(
+        neighborOptions,
+        neighborIndex,
+        neighborWay,
+        currentEdge
+      );
+    }
+  }
+
+  function getNeighborsIndexes(cellIndex: number) {
+    const rowOffset = Math.floor(cellIndex / cols) * cols;
+    const rightIndex = ((cellIndex + 1) % cols) + rowOffset;
+    const leftIndex = ((cellIndex + cols - 1) % cols) + rowOffset;
+
+    const tilesAmount = rows * cols;
+    const bottomIndex = (cellIndex + cols) % tilesAmount;
+    const topIndex = (cellIndex - cols + tilesAmount) % tilesAmount;
+
+    return [rightIndex, topIndex, leftIndex, bottomIndex];
+  }
+
+  function limitCellsOptions(
+    tileOptions: number[],
+    cellIndex: number,
+    comparatorToCellWay: number,
+    comparatorsEdge: string
+  ) {
+    comparatorsEdge = reverseString(comparatorsEdge);
+    const cellToComparatorWay = (comparatorToCellWay + 2) % 4;
+    tileOptions.forEach((tileOption) => {
+      const possibleTile = tiles[tileOption];
+      const possibleEdge = possibleTile.edges[cellToComparatorWay];
+      const edgesNotCompatible = comparatorsEdge !== possibleEdge;
+
+      if (edgesNotCompatible) rejectTile(cellIndex, tileOption);
+    });
+  }
+
+  function reverseString(string: string) {
+    let stringArray = string.split("");
+    stringArray.reverse();
+    return stringArray.join("");
+  }
+
+  function rejectTile(cellIndex: number, rejectedTile: number) {
+    setGrid((prevGrid) => {
+      const nextGrid = prevGrid.slice();
+      let tileOptions = nextGrid[cellIndex].slice();
+      const rejectedTileIndex = tileOptions.indexOf(rejectedTile);
+
+      if (rejectedTileIndex === -1) return prevGrid;
+
+      tileOptions.splice(rejectedTileIndex, 1);
+      nextGrid[cellIndex] = tileOptions;
+
+      // TODO: After this state update some tiles will be consired collapsed but
+      // it's neighbors won't have it's entropy re-calculated. Implement
+      // recusive entropy propagation here
+
+      return nextGrid;
+    });
   }
 
   const gridStyle: React.CSSProperties = {
