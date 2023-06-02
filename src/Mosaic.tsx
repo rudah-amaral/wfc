@@ -46,13 +46,14 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     const randomTile = Math.floor(Math.random() * selectedCell.options.length);
     nextGrid[selectedCell.index] = [selectedCell.options[randomTile]];
 
-    setGrid(nextGrid);
     nextGrid.forEach((tileOptions, cellIndex) => {
       if (tileOptions.length !== 1) return;
 
       const currentTile = tileOptions[0];
       limitNeighborsOptions(nextGrid, cellIndex, currentTile);
     });
+
+    setGrid(nextGrid);
   }
 
   function limitNeighborsOptions(
@@ -67,12 +68,15 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
       if (neighborOptions.length <= 1) continue;
 
       const currentEdge = currentTile.edges[neighborWay];
-      limitCellsOptions(
+      grid[neighborIndex] = limitCellsOptions(
         neighborOptions,
-        neighborIndex,
         neighborWay,
         currentEdge
       );
+      // TODO: After this state update some tiles will be consired collapsed but
+      // it's neighbors won't have it's entropy re-calculated. This can lead to
+      // tiles being collapsed in ways that put the mosaic in a paradox state.
+      // Implement recusive entropy propagation here
     }
   }
 
@@ -90,17 +94,14 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
 
   function limitCellsOptions(
     tileOptions: tile[],
-    cellIndex: number,
     comparatorToCellWay: number,
     comparatorsEdge: string
   ) {
     comparatorsEdge = reverseString(comparatorsEdge);
     const cellToComparatorWay = (comparatorToCellWay + 2) % 4;
-    tileOptions.forEach((possibleTile) => {
+    return tileOptions.filter((possibleTile) => {
       const possibleEdge = possibleTile.edges[cellToComparatorWay];
-      const edgesNotCompatible = comparatorsEdge !== possibleEdge;
-
-      if (edgesNotCompatible) rejectTile(cellIndex, possibleTile);
+      return comparatorsEdge === possibleEdge;
     });
   }
 
@@ -108,25 +109,6 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     let stringArray = string.split("");
     stringArray.reverse();
     return stringArray.join("");
-  }
-
-  function rejectTile(cellIndex: number, rejectedTile: tile) {
-    setGrid((prevGrid) => {
-      const nextGrid = prevGrid.slice();
-      let tileOptions = nextGrid[cellIndex].slice();
-      const rejectedTileIndex = tileOptions.indexOf(rejectedTile);
-
-      if (rejectedTileIndex === -1) return prevGrid;
-
-      tileOptions.splice(rejectedTileIndex, 1);
-      nextGrid[cellIndex] = tileOptions;
-
-      // TODO: After this state update some tiles will be consired collapsed but
-      // it's neighbors won't have it's entropy re-calculated. Implement
-      // recusive entropy propagation here
-
-      return nextGrid;
-    });
   }
 
   const gridStyle: React.CSSProperties = {
