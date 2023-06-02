@@ -1,5 +1,6 @@
 import { useState } from "react";
-import Tile, { tilesetProperties } from "./Tile";
+import Tile from "./Tile";
+import tileset from "./tileset";
 
 interface MosaicProps {
   cols: number;
@@ -7,40 +8,15 @@ interface MosaicProps {
   tileSize: number;
 }
 
-interface tileData {
-  edges: string[];
-  baseTileId: number;
-  rotations: number;
-}
-
-let tiles: tileData[] = [];
-tilesetProperties.forEach((baseTile, baseTileId) => {
-  for (let rotations = 0; rotations <= baseTile.maxRotations; rotations++) {
-    const rotatedTile = rotateTile(baseTile.edges, rotations);
-    tiles.push({ edges: rotatedTile, baseTileId, rotations });
-  }
-});
-
-function rotateTile(tile: string[], rotations: number) {
-  rotations = rotations % 4;
-  let rotatedTile = tile.slice();
-  for (let i = 0; i < rotations; i++) {
-    rotatedTile.unshift(rotatedTile.pop() as string);
-  }
-
-  return rotatedTile;
-}
-
-const cellOptions = tiles.map((_, tileIndex) => tileIndex);
-
 export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
   const gridOptions = Array(cols * rows)
     .fill(null)
-    .map(() => [...cellOptions]);
-  let [grid, setGrid] = useState(gridOptions.slice());
+    .map(() => [...tileset]);
+  let [grid, setGrid] = useState(gridOptions);
+  type tile = (typeof tileset)[number];
 
   function handleClick() {
-    let leastOptions = tiles.length;
+    let leastOptions = tileset.length;
     grid.forEach((tileOptions) => {
       if (tileOptions.length > 1 && tileOptions.length < leastOptions) {
         leastOptions = tileOptions.length;
@@ -49,7 +25,7 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
 
     interface cellData {
       index: number;
-      options: number[];
+      options: tile[];
     }
     let cellsLeastOptions: cellData[] = [];
     grid.forEach((tileOptions, index) => {
@@ -69,21 +45,20 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     const nextGrid = grid.slice();
     const randomTile = Math.floor(Math.random() * selectedCell.options.length);
     nextGrid[selectedCell.index] = [selectedCell.options[randomTile]];
-    setGrid(nextGrid);
 
-    nextGrid.forEach((tileOptions, cellIndex, grid) => {
+    setGrid(nextGrid);
+    nextGrid.forEach((tileOptions, cellIndex) => {
       if (tileOptions.length !== 1) return;
 
-      const currentTileIndex = tileOptions[0];
-      const currentTile = tiles[currentTileIndex];
-      limitNeighborsOptions(grid, cellIndex, currentTile);
+      const currentTile = tileOptions[0];
+      limitNeighborsOptions(nextGrid, cellIndex, currentTile);
     });
   }
 
   function limitNeighborsOptions(
-    grid: number[][],
+    grid: tile[][],
     cellIndex: number,
-    currentTile: tileData
+    currentTile: tile
   ) {
     const neighborsIndexes = getNeighborsIndexes(cellIndex);
     for (let neighborWay = 0; neighborWay < 4; neighborWay++) {
@@ -114,19 +89,18 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
   }
 
   function limitCellsOptions(
-    tileOptions: number[],
+    tileOptions: tile[],
     cellIndex: number,
     comparatorToCellWay: number,
     comparatorsEdge: string
   ) {
     comparatorsEdge = reverseString(comparatorsEdge);
     const cellToComparatorWay = (comparatorToCellWay + 2) % 4;
-    tileOptions.forEach((tileOption) => {
-      const possibleTile = tiles[tileOption];
+    tileOptions.forEach((possibleTile) => {
       const possibleEdge = possibleTile.edges[cellToComparatorWay];
       const edgesNotCompatible = comparatorsEdge !== possibleEdge;
 
-      if (edgesNotCompatible) rejectTile(cellIndex, tileOption);
+      if (edgesNotCompatible) rejectTile(cellIndex, possibleTile);
     });
   }
 
@@ -136,7 +110,7 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     return stringArray.join("");
   }
 
-  function rejectTile(cellIndex: number, rejectedTile: number) {
+  function rejectTile(cellIndex: number, rejectedTile: tile) {
     setGrid((prevGrid) => {
       const nextGrid = prevGrid.slice();
       let tileOptions = nextGrid[cellIndex].slice();
@@ -182,8 +156,8 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
                 tileOptions.length
               ) : (
                 <Tile
-                  id={tiles[tileOptions[0]].baseTileId}
-                  rotations={tiles[tileOptions[0]].rotations}
+                  id={tileOptions[0].tileId}
+                  rotations={tileOptions[0].rotations}
                   size={tileSize}
                 />
               )}
