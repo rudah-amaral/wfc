@@ -2,6 +2,12 @@ import { useState } from "react";
 import Tile from "./Tile";
 import tileset from "./tileset";
 
+type tile = (typeof tileset)[number];
+interface cellData {
+  index: number;
+  options: tile[];
+}
+
 interface MosaicProps {
   cols: number;
   rows: number;
@@ -13,7 +19,6 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     .fill(null)
     .map(() => [...tileset]);
   let [grid, setGrid] = useState(gridOptions);
-  type tile = (typeof tileset)[number];
 
   function handleClick() {
     let leastOptions = tileset.length;
@@ -23,10 +28,6 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
       }
     });
 
-    interface cellData {
-      index: number;
-      options: tile[];
-    }
     let cellsLeastOptions: cellData[] = [];
     grid.forEach((tileOptions, index) => {
       if (tileOptions.length === leastOptions) {
@@ -46,38 +47,65 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     const randomTile = Math.floor(Math.random() * selectedCell.options.length);
     nextGrid[selectedCell.index] = [selectedCell.options[randomTile]];
 
-    nextGrid.forEach((tileOptions, cellIndex) => {
-      if (tileOptions.length !== 1) return;
-
-      const currentTile = tileOptions[0];
-      limitNeighborsOptions(nextGrid, cellIndex, currentTile);
-    });
-
-    setGrid(nextGrid);
+    propagateEntropy(nextGrid, selectedCell);
   }
 
-  function limitNeighborsOptions(
-    grid: tile[][],
-    cellIndex: number,
-    currentTile: tile
-  ) {
-    const neighborsIndexes = getNeighborsIndexes(cellIndex);
-    for (let neighborWay = 0; neighborWay < 4; neighborWay++) {
-      let neighborIndex = neighborsIndexes[neighborWay];
-      let neighborOptions = grid[neighborIndex];
-      if (neighborOptions.length <= 1) continue;
+  interface propagationStep {
+    path: number;
+    neighbors: (number | null)[];
+  }
+  function propagateEntropy(grid: tile[][], selectedCell: cellData) {
+    let propagationStack: propagationStep[] = [];
+    propagateToNeighbors(selectedCell.index, propagationStack, grid);
 
-      const currentEdge = currentTile.edges[neighborWay];
-      grid[neighborIndex] = limitCellsOptions(
+    while (propagationStack.length > 0) {
+      const stackTop = propagationStack[propagationStack.length - 1];
+
+      let neighborWay = stackTop.neighbors.length - 1;
+      let neighborIndex = stackTop.neighbors.pop();
+      while (neighborIndex === null) {
+        neighborIndex = stackTop.neighbors.pop();
+        neighborWay -= 1;
+      }
+      if (neighborIndex === undefined) {
+        propagationStack.pop();
+        continue;
+      }
+
+      const neighborOptions = grid[neighborIndex];
+      const newNeighborOptions = getCongruentTiles(
         neighborOptions,
-        neighborWay,
-        currentEdge
+        grid[stackTop.path],
+        neighborWay
       );
-      // TODO: After this state update some tiles will be consired collapsed but
-      // it's neighbors won't have it's entropy re-calculated. This can lead to
-      // tiles being collapsed in ways that put the mosaic in a paradox state.
-      // Implement recusive entropy propagation here
+
+      const entropyReduced = newNeighborOptions.length < neighborOptions.length;
+      if (entropyReduced) {
+        grid[neighborIndex] = newNeighborOptions;
+        propagateToNeighbors(neighborIndex, propagationStack, grid);
+      }
     }
+
+    setGrid(grid);
+  }
+
+  function propagateToNeighbors(
+    cellIndex: number,
+    propagationStack: propagationStep[],
+    grid: tile[][]
+  ) {
+    const neighborsToPropagate = getNeighborsIndexes(cellIndex).map(
+      (neighborIndex) => {
+        const neighborIsInCurrentPath = propagationStack.some((stackItem) => {
+          return stackItem.path === cellIndex;
+        });
+        const neighborAlreadyCollapsed = grid[neighborIndex].length <= 1;
+
+        if (neighborIsInCurrentPath || neighborAlreadyCollapsed) return null;
+        return neighborIndex;
+      }
+    );
+    propagationStack.push({ path: cellIndex, neighbors: neighborsToPropagate });
   }
 
   function getNeighborsIndexes(cellIndex: number) {
@@ -92,17 +120,22 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     return [rightIndex, topIndex, leftIndex, bottomIndex];
   }
 
-  function limitCellsOptions(
-    tileOptions: tile[],
-    comparatorToCellWay: number,
-    comparatorsEdge: string
-  ) {
-    comparatorsEdge = reverseString(comparatorsEdge);
-    const cellToComparatorWay = (comparatorToCellWay + 2) % 4;
-    return tileOptions.filter((possibleTile) => {
-      const possibleEdge = possibleTile.edges[cellToComparatorWay];
-      return comparatorsEdge === possibleEdge;
+  function getCongruentTiles(tiles: tile[], pattern: tile[], tilesWay: number) {
+    const patternWay = (tilesWay + 2) % 4;
+    const tilesWithSameEdge: tile[] = [];
+
+    tiles.forEach((tile) => {
+      const tileEdge = reverseString(tile.edges[patternWay]);
+
+      for (const comparator of pattern) {
+        let comparatorEdge = comparator.edges[tilesWay];
+        if (tileEdge === comparatorEdge) {
+          tilesWithSameEdge.push(tile);
+          break;
+        }
+      }
     });
+    return tilesWithSameEdge;
   }
 
   function reverseString(string: string) {
