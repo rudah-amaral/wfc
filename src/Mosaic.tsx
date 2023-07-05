@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Tile from "./Tile";
 import tileset from "./tileset";
+import styles from "./Mosaic.module.scss";
 
 type tile = (typeof tileset)[number];
 interface cellData {
@@ -145,24 +146,21 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
   }
 
   const gridStyle: React.CSSProperties = {
-    display: "grid",
-    width: "min-content",
     gridTemplateRows: `repeat(${rows}, ${tileSize}px)`,
     gridTemplateColumns: `repeat(${cols}, ${tileSize}px)`,
   };
 
   return (
     <>
-      <div style={gridStyle} onClick={handleClick}>
+      <div className={styles.grid} style={gridStyle} onClick={handleClick}>
         {grid.map((tileOptions, index) => {
           const rowStart = Math.floor(index / cols) + 1;
+          const rowEnd = rowStart + 1;
           const colStart = (index % cols) + 1;
+          const colEnd = colStart + 1;
 
           const cellStyle: React.CSSProperties = {
-            backgroundColor: "lightgray",
-            gridArea: `${rowStart} / ${colStart} / ${rowStart + 1} / ${
-              colStart + 1
-            }`,
+            gridArea: `${rowStart} / ${colStart} / ${rowEnd} / ${colEnd}`,
           };
 
           return (
