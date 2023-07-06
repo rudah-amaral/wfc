@@ -1,7 +1,7 @@
 const tilesetProperties = [
   // Tile 0
   {
-    edges: ["ACA", "ABA", "ACA", "ABA"],
+    edges: ["ABA", "ACA", "ABA", "ACA"],
     maxRotations: 1,
   },
   // Tile 1
@@ -11,7 +11,7 @@ const tilesetProperties = [
   },
   // Tile 2
   {
-    edges: ["DAA", "ABA", "AAD", "DDD"],
+    edges: ["ABA", "AAD", "DDD", "DAA"],
     maxRotations: 3,
   },
   // Tile 3
@@ -36,17 +36,17 @@ const tilesetProperties = [
   },
   // Tile 7
   {
-    edges: ["ABA", "AAA", "ABA", "ABA"],
+    edges: ["AAA", "ABA", "ABA", "ABA"],
     maxRotations: 3,
   },
   // Tile 8
   {
-    edges: ["AAA", "ABA", "AAA", "ABA"],
+    edges: ["ABA", "AAA", "ABA", "AAA"],
     maxRotations: 1,
   },
   // Tile 9
   {
-    edges: ["AAA", "ACA", "AAA", "ABA"],
+    edges: ["ACA", "AAA", "ABA", "AAA"],
     maxRotations: 3,
   },
   // Tile 10
@@ -56,17 +56,17 @@ const tilesetProperties = [
   },
   // Tile 11
   {
-    edges: ["ABA", "AAA", "ABA", "AAA"],
+    edges: ["AAA", "ABA", "AAA", "ABA"],
     maxRotations: 1,
   },
   // Tile 12
   {
-    edges: ["AAA", "ABA", "AAA", "AAA"],
+    edges: ["ABA", "AAA", "AAA", "AAA"],
     maxRotations: 3,
   },
   // Tile 13
   {
-    edges: ["ACA", "AAA", "ACA", "AAA"],
+    edges: ["AAA", "ACA", "AAA", "ACA"],
     maxRotations: 1,
   },
 ];

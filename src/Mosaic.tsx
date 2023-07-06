@@ -118,7 +118,7 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     const bottomIndex = (cellIndex + cols) % tilesAmount;
     const topIndex = (cellIndex - cols + tilesAmount) % tilesAmount;
 
-    return [rightIndex, topIndex, leftIndex, bottomIndex];
+    return [topIndex, rightIndex, bottomIndex, leftIndex];
   }
 
   function getCongruentTiles(tiles: tile[], pattern: tile[], tilesWay: number) {
