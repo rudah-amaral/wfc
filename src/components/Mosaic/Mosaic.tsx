@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Tile from "./Tile";
-import tileset from "./tileset";
+import Tile from "../Tile";
+import tileset from "../../circuit-tileset/tileset";
 import styles from "./Mosaic.module.scss";
 
 type tile = (typeof tileset)[number];

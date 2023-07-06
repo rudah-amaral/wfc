@@ -1,4 +1,4 @@
-const tilesPath = import.meta.glob<string>("./circuit-tileset/*.png", {
+const tilesPath = import.meta.glob<string>("../../circuit-tileset/*.png", {
   import: "default",
   eager: true,
 });
@@ -10,7 +10,7 @@ interface TileProps {
 }
 
 export default function Tile({ id, size, rotations }: TileProps) {
-  const tilePath = tilesPath[`./circuit-tileset/${id}.png`];
+  const tilePath = tilesPath[`../../circuit-tileset/${id}.png`];
   const tileStyles: React.CSSProperties = {
     rotate: `${0.25 * rotations}turn`,
   };
