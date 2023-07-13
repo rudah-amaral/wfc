@@ -15,13 +15,71 @@ interface MosaicProps {
   tileSize: number;
 }
 
+interface CollapsedCell {
+  index: number;
+  tile: tile;
+}
+interface GridStep {
+  grid: tile[][];
+  collapsedCell: null | CollapsedCell;
+}
+
 export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
   const gridOptions = Array(cols * rows)
     .fill(null)
     .map(() => [...tileset]);
-  let [grid, setGrid] = useState(gridOptions);
+  let [history, setHistory] = useState<GridStep[]>([
+    {
+      grid: gridOptions,
+      collapsedCell: null,
+    },
+  ]);
+  const [mosaicHasSolution, setMosaicHasSolution] = useState(true);
+  const grid = history[history.length - 1].grid;
 
   function handleClick() {
+    const reachedDeadEnd = grid.some((tileOptions) => {
+      return tileOptions.length === 0;
+    });
+    if (reachedDeadEnd) {
+      undoLastGuess();
+      return;
+    }
+    collapseCellWithLeastEntropy();
+  }
+
+  function undoLastGuess() {
+    const nextHistory = [...history];
+    const lastStep = nextHistory.length - 1;
+    const failedGuess = nextHistory[lastStep].collapsedCell;
+    // Base case representing having a cell with zero entropy in the first
+    // step of the history, which only happens when the tileset has no
+    // solution whatsoever with this combination of rows and columns
+    if (failedGuess === null) {
+      setMosaicHasSolution(false);
+      return;
+    }
+    nextHistory.splice(lastStep);
+
+    // To fix the previous step, remove the failed guess from the pool of
+    // possible tiles
+    const previousStep = nextHistory.length - 1;
+    const previousGrid = nextHistory[previousStep].grid;
+    let fixedCell = previousGrid[failedGuess.index].filter((tileOption) => {
+      return tileOption !== failedGuess.tile;
+    });
+    previousGrid[failedGuess.index] = fixedCell;
+
+    // And then recalculate the entropy propagated from that cell
+    nextHistory[previousStep].grid = propagateEntropy(
+      previousGrid,
+      failedGuess.index
+    );
+
+    setHistory(nextHistory);
+  }
+
+  function collapseCellWithLeastEntropy() {
     let leastOptions = tileset.length;
     grid.forEach((tileOptions) => {
       if (tileOptions.length > 1 && tileOptions.length < leastOptions) {
@@ -37,27 +95,43 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     });
 
     if (cellsLeastOptions.length === 0) {
-      setGrid(gridOptions.slice());
+      setHistory([
+        {
+          grid: [...gridOptions],
+          collapsedCell: null,
+        },
+      ]);
       return;
     }
 
     const randomCell = Math.floor(Math.random() * cellsLeastOptions.length);
     const selectedCell = cellsLeastOptions[randomCell];
 
-    const nextGrid = grid.slice();
     const randomTile = Math.floor(Math.random() * selectedCell.options.length);
-    nextGrid[selectedCell.index] = [selectedCell.options[randomTile]];
+    const selectedTile = selectedCell.options[randomTile];
+    let nextGrid = grid.slice();
+    nextGrid[selectedCell.index] = [selectedTile];
+    nextGrid = propagateEntropy(nextGrid, selectedCell.index);
 
-    propagateEntropy(nextGrid, selectedCell);
+    setHistory([
+      ...history,
+      {
+        grid: nextGrid,
+        collapsedCell: {
+          index: selectedCell.index,
+          tile: selectedTile,
+        },
+      },
+    ]);
   }
 
   interface propagationStep {
     path: number;
     neighbors: (number | null)[];
   }
-  function propagateEntropy(grid: tile[][], selectedCell: cellData) {
+  function propagateEntropy(grid: tile[][], selectedCellIndex: number) {
     let propagationStack: propagationStep[] = [];
-    propagateToNeighbors(selectedCell.index, propagationStack, grid);
+    propagateToNeighbors(selectedCellIndex, propagationStack, grid);
 
     while (propagationStack.length > 0) {
       const stackTop = propagationStack[propagationStack.length - 1];
@@ -87,7 +161,7 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
       }
     }
 
-    setGrid(grid);
+    return grid;
   }
 
   function propagateToNeighbors(
@@ -95,6 +169,7 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     propagationStack: propagationStep[],
     grid: tile[][]
   ) {
+    if (grid[cellIndex].length === 0) return;
     const neighborsToPropagate = getNeighborsIndexes(cellIndex).map(
       (neighborIndex) => {
         const neighborIsInCurrentPath = propagationStack.some((stackItem) => {
@@ -150,8 +225,8 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     gridTemplateColumns: `repeat(${cols}, ${tileSize}px)`,
   };
 
-  return (
-    <>
+  if (mosaicHasSolution) {
+    return (
       <div className={styles.grid} style={gridStyle} onClick={handleClick}>
         {grid.map((tileOptions, index) => {
           const rowStart = Math.floor(index / cols) + 1;
@@ -178,6 +253,7 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
           );
         })}
       </div>
-    </>
-  );
+    );
+  }
+  return <p>No solution</p>;
 }
