@@ -12,7 +12,6 @@ interface cellData {
 interface MosaicProps {
   cols: number;
   rows: number;
-  tileSize: number;
 }
 
 interface CollapsedCell {
@@ -24,7 +23,7 @@ interface GridStep {
   collapsedCell: null | CollapsedCell;
 }
 
-export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
+export default function Mosaic({ cols, rows }: MosaicProps) {
   const gridOptions = Array(cols * rows)
     .fill(null)
     .map(() => [...tileset]);
@@ -220,6 +219,7 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
     return stringArray.join("");
   }
 
+  const tileSize = Math.floor(Math.min(1200, 0.9 * window.innerWidth) / cols);
   const gridStyle: React.CSSProperties = {
     gridTemplateRows: `repeat(${rows}, ${tileSize}px)`,
     gridTemplateColumns: `repeat(${cols}, ${tileSize}px)`,
@@ -227,31 +227,34 @@ export default function Mosaic({ cols, rows, tileSize }: MosaicProps) {
 
   if (mosaicHasSolution) {
     return (
-      <div className={styles.grid} style={gridStyle} onClick={handleClick}>
-        {grid.map((tileOptions, index) => {
-          const rowStart = Math.floor(index / cols) + 1;
-          const rowEnd = rowStart + 1;
-          const colStart = (index % cols) + 1;
-          const colEnd = colStart + 1;
+      <div className={styles.gridWrapper}>
+        <div className={styles.grid} style={gridStyle} onClick={handleClick}>
+          {grid.map((tileOptions, index) => {
+            const rowStart = Math.floor(index / cols) + 1;
+            const rowEnd = rowStart + 1;
+            const colStart = (index % cols) + 1;
+            const colEnd = colStart + 1;
 
-          const cellStyle: React.CSSProperties = {
-            gridArea: `${rowStart} / ${colStart} / ${rowEnd} / ${colEnd}`,
-          };
+            const cellStyle: React.CSSProperties = {
+              fontSize: `${Math.floor(tileSize * 0.8)}px`,
+              gridArea: `${rowStart} / ${colStart} / ${rowEnd} / ${colEnd}`,
+            };
 
-          return (
-            <span style={cellStyle}>
-              {tileOptions.length !== 1 ? (
-                tileOptions.length
-              ) : (
-                <Tile
-                  id={tileOptions[0].tileId}
-                  rotations={tileOptions[0].rotations}
-                  size={tileSize}
-                />
-              )}
-            </span>
-          );
-        })}
+            return (
+              <span style={cellStyle} className={styles.cell}>
+                {tileOptions.length !== 1 ? (
+                  tileOptions.length
+                ) : (
+                  <Tile
+                    id={tileOptions[0].tileId}
+                    rotations={tileOptions[0].rotations}
+                    size={tileSize}
+                  />
+                )}
+              </span>
+            );
+          })}
+        </div>
       </div>
     );
   }

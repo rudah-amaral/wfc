@@ -1,3 +1,5 @@
+import styles from "./Tile.module.scss";
+
 const tilesPath = import.meta.glob<string>("../../circuit-tileset/*.png", {
   import: "default",
   eager: true,
@@ -14,5 +16,13 @@ export default function Tile({ id, size, rotations }: TileProps) {
   const tileStyles: React.CSSProperties = {
     rotate: `${0.25 * rotations}turn`,
   };
-  return <img src={tilePath} width={size} height={size} style={tileStyles} />;
+  return (
+    <img
+      src={tilePath}
+      width={size}
+      height={size}
+      className={styles.tile}
+      style={tileStyles}
+    />
+  );
 }

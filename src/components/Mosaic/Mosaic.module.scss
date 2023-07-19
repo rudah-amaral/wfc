@@ -1,5 +1,15 @@
+.gridWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
 .grid {
   display: grid;
-  width: min-content;
+  align-items: center;
   background-color: lightgray;
+}
+
+.cell {
+  text-align: center;
 }
