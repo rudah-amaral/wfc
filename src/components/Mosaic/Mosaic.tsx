@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Tile from "../Tile";
 import tileset from "../../circuit-tileset/tileset";
 import styles from "./Mosaic.module.scss";
@@ -27,14 +27,19 @@ export default function Mosaic({ cols, rows }: MosaicProps) {
   const gridOptions = Array(cols * rows)
     .fill(null)
     .map(() => [...tileset]);
-  let [history, setHistory] = useState<GridStep[]>([
+  const initialHistory: GridStep[] = [
     {
       grid: gridOptions,
       collapsedCell: null,
     },
-  ]);
+  ];
+  let [history, setHistory] = useState(initialHistory);
   const [mosaicHasSolution, setMosaicHasSolution] = useState(true);
   const grid = history[history.length - 1].grid;
+
+  useEffect(() => {
+    setHistory(initialHistory);
+  }, [cols, rows]);
 
   function handleClick() {
     const reachedDeadEnd = grid.some((tileOptions) => {
@@ -94,12 +99,7 @@ export default function Mosaic({ cols, rows }: MosaicProps) {
     });
 
     if (cellsLeastOptions.length === 0) {
-      setHistory([
-        {
-          grid: [...gridOptions],
-          collapsedCell: null,
-        },
-      ]);
+      setHistory(initialHistory);
       return;
     }
 
@@ -219,7 +219,7 @@ export default function Mosaic({ cols, rows }: MosaicProps) {
     return stringArray.join("");
   }
 
-  const tileSize = Math.floor(Math.min(1200, 0.9 * window.innerWidth) / cols);
+  const tileSize = Math.min(1200, 0.9 * window.innerWidth) / cols;
   const gridStyle: React.CSSProperties = {
     gridTemplateRows: `repeat(${rows}, ${tileSize}px)`,
     gridTemplateColumns: `repeat(${cols}, ${tileSize}px)`,
