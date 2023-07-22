@@ -245,11 +245,7 @@ export default function Mosaic({ cols, rows }: MosaicProps) {
                 {tileOptions.length !== 1 ? (
                   tileOptions.length
                 ) : (
-                  <Tile
-                    id={tileOptions[0].tileId}
-                    rotations={tileOptions[0].rotations}
-                    size={tileSize}
-                  />
+                  <Tile id={tileOptions[0].id} size={tileSize} />
                 )}
               </span>
             );
