@@ -31,31 +31,34 @@
   font-weight: inherit;
   font-size: inherit;
   cursor: pointer;
+  outline: none;
 }
 
 .plusButton {
   border-top-right-radius: calc(var(--button-roundness) - 1px);
-  background-color: rgb(255, 137, 33);
+  background-color: rgb(230, 108, 0);
 }
 
-.plusButton:hover {
-  background-color: scale-color($color: rgb(255, 137, 33), $lightness: -20%);
+.plusButton:hover,
+.plusButton:focus {
+  background-color: scale-color($color: rgb(230, 108, 0), $lightness: 20%);
 }
 
 .plusButton:active {
-  background-color: rgb(255, 137, 33);
+  background-color: rgb(230, 108, 0);
 }
 
 .minusButton {
   border-top: 1px solid black;
   border-bottom-right-radius: calc(var(--button-roundness) - 1px);
-  background-color: rgb(194, 60, 255);
+  background-color: rgb(173, 0, 252);
 }
 
-.minusButton:hover {
-  background-color: scale-color($color: rgb(194, 60, 255), $lightness: -20%);
+.minusButton:hover,
+.minusButton:focus {
+  background-color: scale-color($color: rgb(173, 0, 252), $lightness: 20%);
 }
 
 .minusButton:active {
-  background-color: rgb(194, 60, 255);
+  background-color: rgb(173, 0, 252);
 }
