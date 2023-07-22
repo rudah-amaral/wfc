@@ -14,9 +14,7 @@ export default function StatefulInput(props: StatefulInputProps) {
   const intervalRef = useRef<null | number>(null);
 
   useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+    return () => stopIncrementing();
   }, []);
 
   function increment(incrementer: number) {
@@ -29,13 +27,9 @@ export default function StatefulInput(props: StatefulInputProps) {
 
   function startIncrementing(incrementer: number) {
     if (intervalRef.current) return;
-    intervalRef.current = setInterval(() => {
-      props.setValue((value) => {
-        const nextValue = value + incrementer;
-        if (nextValue > maxValue || nextValue < minValue) return value;
-        return nextValue;
-      });
-    }, 100);
+
+    increment(incrementer);
+    intervalRef.current = setInterval(() => increment(incrementer), 100);
   }
 
   function stopIncrementing() {
@@ -44,6 +38,10 @@ export default function StatefulInput(props: StatefulInputProps) {
       intervalRef.current = null;
     }
   }
+
+  window.addEventListener("mouseup", stopIncrementing);
+  window.addEventListener("touchend", stopIncrementing);
+  window.addEventListener("touchcancel", stopIncrementing);
 
   return (
     <div className={styles.inputWrapper}>
@@ -55,15 +53,8 @@ export default function StatefulInput(props: StatefulInputProps) {
       <div className={styles.buttonsWrapper}>
         <button
           type="button"
-          onClick={() => increment(1)}
-          onMouseDown={() => {
-            startIncrementing(1);
-          }}
-          onTouchStart={() => {
-            startIncrementing(1);
-          }}
-          onMouseUp={stopIncrementing}
-          onTouchEnd={stopIncrementing}
+          onMouseDown={() => startIncrementing(1)}
+          onTouchStart={() => startIncrementing(1)}
           onContextMenu={(e) => e.preventDefault()}
           className={`${styles.button} ${styles.plusButton}`}
         >
@@ -71,15 +62,8 @@ export default function StatefulInput(props: StatefulInputProps) {
         </button>
         <button
           type="button"
-          onClick={() => increment(-1)}
-          onMouseDown={() => {
-            startIncrementing(-1);
-          }}
-          onTouchStart={() => {
-            startIncrementing(-1);
-          }}
-          onMouseUp={stopIncrementing}
-          onTouchEnd={stopIncrementing}
+          onMouseDown={() => startIncrementing(-1)}
+          onTouchStart={() => startIncrementing(-1)}
           onContextMenu={(e) => e.preventDefault()}
           className={`${styles.button} ${styles.minusButton}`}
         >
