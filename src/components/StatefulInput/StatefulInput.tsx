@@ -7,10 +7,11 @@ interface StatefulInputProps {
   setValue: React.Dispatch<React.SetStateAction<number>>;
   minValue: number;
   maxValue: number;
+  disabled: boolean;
 }
 
 export default function StatefulInput(props: StatefulInputProps) {
-  const { maxValue, minValue } = props;
+  const { maxValue, minValue, disabled } = props;
   const intervalRef = useRef<null | number>(null);
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function StatefulInput(props: StatefulInputProps) {
           onTouchStart={() => startIncrementing(1)}
           onContextMenu={(e) => e.preventDefault()}
           className={`${styles.button} ${styles.plusButton}`}
+          disabled={disabled}
         >
           +
         </button>
@@ -66,6 +68,7 @@ export default function StatefulInput(props: StatefulInputProps) {
           onTouchStart={() => startIncrementing(-1)}
           onContextMenu={(e) => e.preventDefault()}
           className={`${styles.button} ${styles.minusButton}`}
+          disabled={disabled}
         >
           -
         </button>

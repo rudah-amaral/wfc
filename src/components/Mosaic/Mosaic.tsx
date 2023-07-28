@@ -10,47 +10,53 @@ interface cellData {
 }
 
 interface MosaicProps {
-  cols: number;
+  columns: number;
   rows: number;
+  isMosaicGenerating: boolean;
+  setIsMosaicGenerating: React.Dispatch<React.SetStateAction<boolean>>;
+  history: GridStep[];
+  setHistory: React.Dispatch<React.SetStateAction<GridStep[]>>;
+  resetHistory: () => void;
 }
 
 interface CollapsedCell {
   index: number;
   tile: tile;
 }
-interface GridStep {
+export interface GridStep {
   grid: tile[][];
   collapsedCell: null | CollapsedCell;
 }
 
-export default function Mosaic({ cols, rows }: MosaicProps) {
-  const gridOptions = Array(cols * rows)
-    .fill(null)
-    .map(() => [...tileset]);
-  const initialHistory: GridStep[] = [
-    {
-      grid: gridOptions,
-      collapsedCell: null,
-    },
-  ];
-  let [history, setHistory] = useState(initialHistory);
+export default function Mosaic({
+  columns,
+  rows,
+  isMosaicGenerating,
+  setIsMosaicGenerating,
+  history,
+  setHistory,
+  resetHistory,
+}: MosaicProps) {
   const [mosaicHasSolution, setMosaicHasSolution] = useState(true);
   const grid = history[history.length - 1].grid;
 
   useEffect(() => {
-    setHistory(initialHistory);
-  }, [cols, rows]);
+    setIsMosaicGenerating(false);
+    resetHistory();
+  }, [columns, rows]);
 
-  function handleClick() {
-    const reachedDeadEnd = grid.some((tileOptions) => {
-      return tileOptions.length === 0;
-    });
-    if (reachedDeadEnd) {
-      undoLastGuess();
-      return;
+  useEffect(() => {
+    if (isMosaicGenerating) {
+      const reachedDeadEnd = grid.some((tileOptions) => {
+        return tileOptions.length === 0;
+      });
+      if (reachedDeadEnd) {
+        undoLastGuess();
+        return;
+      }
+      collapseCellWithLeastEntropy();
     }
-    collapseCellWithLeastEntropy();
-  }
+  });
 
   function undoLastGuess() {
     const nextHistory = [...history];
@@ -99,7 +105,7 @@ export default function Mosaic({ cols, rows }: MosaicProps) {
     });
 
     if (cellsLeastOptions.length === 0) {
-      setHistory(initialHistory);
+      setIsMosaicGenerating(false);
       return;
     }
 
@@ -184,13 +190,13 @@ export default function Mosaic({ cols, rows }: MosaicProps) {
   }
 
   function getNeighborsIndexes(cellIndex: number) {
-    const rowOffset = Math.floor(cellIndex / cols) * cols;
-    const rightIndex = ((cellIndex + 1) % cols) + rowOffset;
-    const leftIndex = ((cellIndex + cols - 1) % cols) + rowOffset;
+    const rowOffset = Math.floor(cellIndex / columns) * columns;
+    const rightIndex = ((cellIndex + 1) % columns) + rowOffset;
+    const leftIndex = ((cellIndex + columns - 1) % columns) + rowOffset;
 
-    const tilesAmount = rows * cols;
-    const bottomIndex = (cellIndex + cols) % tilesAmount;
-    const topIndex = (cellIndex - cols + tilesAmount) % tilesAmount;
+    const tilesAmount = rows * columns;
+    const bottomIndex = (cellIndex + columns) % tilesAmount;
+    const topIndex = (cellIndex - columns + tilesAmount) % tilesAmount;
 
     return [topIndex, rightIndex, bottomIndex, leftIndex];
   }
@@ -219,20 +225,20 @@ export default function Mosaic({ cols, rows }: MosaicProps) {
     return stringArray.join("");
   }
 
-  const tileSize = Math.min(1200, 0.9 * window.innerWidth) / cols;
+  const tileSize = Math.min(1200, 0.9 * window.innerWidth) / columns;
   const gridStyle: React.CSSProperties = {
     gridTemplateRows: `repeat(${rows}, ${tileSize}px)`,
-    gridTemplateColumns: `repeat(${cols}, ${tileSize}px)`,
+    gridTemplateColumns: `repeat(${columns}, ${tileSize}px)`,
   };
 
   if (mosaicHasSolution) {
     return (
       <div className={styles.gridWrapper}>
-        <div className={styles.grid} style={gridStyle} onClick={handleClick}>
+        <div className={styles.grid} style={gridStyle}>
           {grid.map((tileOptions, index) => {
-            const rowStart = Math.floor(index / cols) + 1;
+            const rowStart = Math.floor(index / columns) + 1;
             const rowEnd = rowStart + 1;
-            const colStart = (index % cols) + 1;
+            const colStart = (index % columns) + 1;
             const colEnd = colStart + 1;
 
             const cellStyle: React.CSSProperties = {

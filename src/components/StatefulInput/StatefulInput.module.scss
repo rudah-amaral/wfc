@@ -32,6 +32,7 @@
   font-size: inherit;
   cursor: pointer;
   outline: none;
+  transition: background-color 100ms ease-in-out;
 }
 
 .plusButton {
@@ -48,6 +49,10 @@
   background-color: rgb(230, 108, 0);
 }
 
+.plusButton:disabled {
+  background-color: scale-color($color: rgb(230, 108, 0), $saturation: -80%);
+}
+
 .minusButton {
   border-top: 1px solid black;
   border-bottom-right-radius: calc(var(--button-roundness) - 1px);
@@ -61,4 +66,8 @@
 
 .minusButton:active {
   background-color: rgb(173, 0, 252);
+}
+
+.minusButton:disabled {
+  background-color: scale-color($color: rgb(173, 0, 252), $saturation: -80%);
 }

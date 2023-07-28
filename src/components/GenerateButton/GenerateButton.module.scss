@@ -1,0 +1,29 @@
+.button {
+  box-sizing: border-box;
+  appearance: none;
+  border: 1px solid black;
+  border-radius: var(--button-roundness);
+  outline: none;
+  cursor: pointer;
+  padding: 1rem;
+  max-width: 405px;
+  flex-grow: 1;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: #8c8cff;
+  transition: background-color 100ms ease-in-out;
+}
+
+.button:hover,
+.button:focus {
+  background-color: scale-color($color: #8c8cff, $lightness: 20%);
+}
+
+.button:active {
+  background-color: #8c8cff;
+}
+
+.button:disabled {
+  background-color: scale-color($color: #8c8cff, $saturation: -80%);
+}

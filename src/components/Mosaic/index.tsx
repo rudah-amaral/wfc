@@ -1,1 +1,1 @@
-export { default } from "./Mosaic";
+export { default, type GridStep } from "./Mosaic";
