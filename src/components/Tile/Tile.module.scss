@@ -1,4 +1,12 @@
 .tile {
   display: block;
   image-rendering: pixelated;
+  animation-name: pop;
+  animation-duration: 200ms;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
 }
