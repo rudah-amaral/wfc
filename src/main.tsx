@@ -6,11 +6,20 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import App from "./components/App";
 import "./global.scss";
+import NavBar from "./components/NavBar";
+import Home from "./components/Home";
+import App from "./components/App";
+import About from "./components/About";
 
 const router = createHashRouter(
-  createRoutesFromElements(<Route path="/" element={<App />}></Route>)
+  createRoutesFromElements(
+    <Route path="/" element={<NavBar />}>
+      <Route index element={<Home />} />
+      <Route path="generate" element={<App />} />
+      <Route path="about" element={<About />} />
+    </Route>
+  )
 );
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

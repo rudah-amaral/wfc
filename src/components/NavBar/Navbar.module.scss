@@ -1,0 +1,48 @@
+.linksList {
+  display: flex;
+  max-width: min(1200px, 90vw);
+  margin: 20px auto;
+  list-style: none;
+  padding: 0;
+  overflow-x: auto;
+}
+
+.listItem {
+  margin-right: 20px;
+
+  &:first-child {
+    margin-right: auto;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.link {
+  text-decoration: none;
+  font-size: 1.3rem;
+  color: #007076;
+  font-weight: bold;
+  padding: 0.6rem;
+  border-radius: var(--button-roundness);
+  display: inline-block;
+  transition: background-color 100ms;
+  outline: none;
+
+  &:global.active {
+    color: white;
+    background-color: #007076;
+  }
+
+  &:hover,
+  &:focus {
+    color: white;
+    background-color: lighten($color: #007076, $amount: 5);
+  }
+
+  &:active {
+    color: white;
+    background-color: #007076;
+  }
+}
