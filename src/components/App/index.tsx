@@ -1,1 +1,1 @@
-export { default } from "./App";
+export { default, loader } from "./App";

@@ -4,10 +4,17 @@ import StatefulInput from "../StatefulInput";
 import GenerateButton from "../GenerateButton";
 import Mosaic, { GridStep } from "../Mosaic";
 import tileset from "../../circuit-tileset/tileset";
+import {
+  Form,
+  LoaderFunctionArgs,
+  redirect,
+  useLoaderData,
+} from "react-router-dom";
 
-function App() {
-  const [columns, setColumns] = useState(10);
-  const [rows, setRows] = useState(5);
+export default function App() {
+  const { rows, columns } = useLoaderData() as Awaited<
+    ReturnType<typeof loader>
+  >;
   const [isMosaicGenerating, setIsMosaicGenerating] = useState(false);
 
   const gridOptions = Array(columns * rows)
@@ -27,24 +34,24 @@ function App() {
 
   return (
     <>
-      <InputsWrapper>
-        <StatefulInput
-          label="columns"
-          value={columns}
-          setValue={setColumns}
-          minValue={2}
-          maxValue={35}
-          disabled={isMosaicGenerating}
-        />
-        <StatefulInput
-          label="rows"
-          value={rows}
-          setValue={setRows}
-          minValue={2}
-          maxValue={25}
-          disabled={isMosaicGenerating}
-        />
-      </InputsWrapper>
+      <Form>
+        <InputsWrapper>
+          <StatefulInput
+            label="columns"
+            value={columns}
+            minValue={2}
+            maxValue={35}
+            disabled={isMosaicGenerating}
+          />
+          <StatefulInput
+            label="rows"
+            value={rows}
+            minValue={2}
+            maxValue={25}
+            disabled={isMosaicGenerating}
+          />
+        </InputsWrapper>
+      </Form>
       <InputsWrapper>
         <GenerateButton
           isMosaicGenerating={isMosaicGenerating}
@@ -65,4 +72,17 @@ function App() {
   );
 }
 
-export default App;
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  let rowsParam = url.searchParams.get("rows");
+  let columnsParam = url.searchParams.get("columns");
+
+  if (rowsParam === null || columnsParam === null) {
+    throw redirect("?columns=10&rows=5");
+  }
+
+  const columns = Number(columnsParam);
+  const rows = Number(rowsParam);
+
+  return { columns, rows };
+}
