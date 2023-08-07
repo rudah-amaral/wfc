@@ -11,7 +11,7 @@ import {
   useLoaderData,
 } from "react-router-dom";
 
-export default function App() {
+export default function Generator() {
   const { rows, columns } = useLoaderData() as Awaited<
     ReturnType<typeof loader>
   >;
