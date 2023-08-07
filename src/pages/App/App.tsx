@@ -1,8 +1,8 @@
 import { useState } from "react";
-import InputsWrapper from "../InputsWrapper";
-import StatefulInput from "../StatefulInput";
-import GenerateButton from "../GenerateButton";
-import Mosaic, { GridStep } from "../Mosaic";
+import InputsWrapper from "../../components/InputsWrapper";
+import StatefulInput from "../../components/StatefulInput";
+import GenerateButton from "../../components/GenerateButton";
+import Mosaic, { GridStep } from "../../components/Mosaic";
 import tileset from "../../circuit-tileset/tileset";
 import {
   Form,

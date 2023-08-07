@@ -8,9 +8,10 @@ import {
 } from "react-router-dom";
 import "./global.scss";
 import NavBar from "./components/NavBar";
-import Home from "./components/Home";
-import App, { loader as appLoader } from "./components/App";
-import About from "./components/About";
+
+import Home from "./pages/Home";
+import App, { loader as appLoader } from "./pages/App";
+import About from "./pages/About";
 
 const router = createHashRouter(
   createRoutesFromElements(
