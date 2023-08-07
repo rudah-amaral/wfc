@@ -13,8 +13,8 @@ export default function NavBar() {
               </NavLink>
             </li>
             <li className={styles.listItem}>
-              <NavLink to="generate" className={styles.link}>
-                Generate
+              <NavLink to="generator" className={styles.link}>
+                Generator
               </NavLink>
             </li>
             <li className={styles.listItem}>

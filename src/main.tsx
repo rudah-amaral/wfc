@@ -16,7 +16,7 @@ const router = createHashRouter(
   createRoutesFromElements(
     <Route path="/" element={<NavBar />}>
       <Route index element={<Home />} />
-      <Route path="generate" element={<App />} loader={appLoader} />
+      <Route path="generator" element={<App />} loader={appLoader} />
       <Route path="about" element={<About />} />
     </Route>
   )
