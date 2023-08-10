@@ -1,0 +1,21 @@
+.error {
+  box-sizing: border-box;
+  max-width: 50ch;
+  margin: 200px auto;
+}
+
+.errorTitle {
+  font-size: 2rem;
+  margin: 0 0 5px;
+}
+
+.errorSubTitle {
+  font-size: 1.4rem;
+  margin: 0 0 30px;
+}
+
+.errorText {
+  margin: 0;
+  font-size: 1.2rem;
+  color: black;
+}
