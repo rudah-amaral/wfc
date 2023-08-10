@@ -1,15 +1,8 @@
 import { useState } from "react";
-import InputsWrapper from "../../components/InputsWrapper";
-import StatefulInput from "../../components/StatefulInput";
-import GenerateButton from "../../components/GenerateButton";
+import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
+import GeneratorControls from "../../components/GeneratorControls";
 import Mosaic, { GridStep } from "../../components/Mosaic";
 import tileset from "../../circuit-tileset/tileset";
-import {
-  Form,
-  LoaderFunctionArgs,
-  redirect,
-  useLoaderData,
-} from "react-router-dom";
 
 export default function Generator() {
   const { rows, columns } = useLoaderData() as Awaited<
@@ -34,31 +27,13 @@ export default function Generator() {
 
   return (
     <>
-      <Form>
-        <InputsWrapper>
-          <StatefulInput
-            label="columns"
-            value={columns}
-            minValue={2}
-            maxValue={35}
-            disabled={isMosaicGenerating}
-          />
-          <StatefulInput
-            label="rows"
-            value={rows}
-            minValue={2}
-            maxValue={25}
-            disabled={isMosaicGenerating}
-          />
-        </InputsWrapper>
-      </Form>
-      <InputsWrapper>
-        <GenerateButton
-          isMosaicGenerating={isMosaicGenerating}
-          setIsMosaicGenerating={setIsMosaicGenerating}
-          resetHistory={resetHistory}
-        />
-      </InputsWrapper>
+      <GeneratorControls
+        columns={columns}
+        rows={rows}
+        isMosaicGenerating={isMosaicGenerating}
+        setIsMosaicGenerating={setIsMosaicGenerating}
+        resetHistory={resetHistory}
+      />
       <Mosaic
         columns={columns}
         rows={rows}

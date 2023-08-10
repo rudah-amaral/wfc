@@ -1,13 +1,15 @@
 .button {
+  display: block;
   box-sizing: border-box;
   appearance: none;
   border: 1px solid black;
   border-radius: var(--button-roundness);
   outline: none;
   cursor: pointer;
+  margin: 20px auto;
   padding: 1rem;
+  width: 100%;
   max-width: 405px;
-  flex-grow: 1;
   color: white;
   font-size: 1.1rem;
   font-weight: bold;
