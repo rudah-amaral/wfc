@@ -1,6 +1,6 @@
-import GenerateButton from "../../components/GenerateButton";
+import DimensionsButtons from "../DimensionsButtons";
+import GenerateButton from "../GenerateButton";
 import styles from "./GeneratorControls.module.scss";
-import DimensionsButtons from "../DimensionsButtons/DimensionsButtons";
 
 interface GeneratorControlsProps {
   columns: number;
