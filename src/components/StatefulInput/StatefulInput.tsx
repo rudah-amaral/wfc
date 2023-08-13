@@ -17,7 +17,7 @@ export default function StatefulInput({
   maxValue,
   disabled,
 }: StatefulInputProps) {
-  const intervalRef = useRef<null | number>(null);
+  const intervalRef = useRef<null | ReturnType<typeof setInterval>>(null);
 
   const submit = useSubmit();
 
