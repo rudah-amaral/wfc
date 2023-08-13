@@ -5,28 +5,26 @@ import DimensionsButtons from "../DimensionsButtons/DimensionsButtons";
 interface GeneratorControlsProps {
   columns: number;
   rows: number;
-  isMosaicGenerating: boolean;
-  setIsMosaicGenerating: React.Dispatch<React.SetStateAction<boolean>>;
+  disabled: boolean;
+  setMosaicStatus: React.Dispatch<
+    React.SetStateAction<"idle" | "generating" | "done">
+  >;
   resetHistory(): void;
 }
 
 export default function GeneratorControls({
   columns,
   rows,
-  isMosaicGenerating,
-  setIsMosaicGenerating,
+  disabled,
+  setMosaicStatus,
   resetHistory,
 }: GeneratorControlsProps) {
   return (
     <div className={styles.controlsWrapper}>
-      <DimensionsButtons
-        columns={columns}
-        rows={rows}
-        isMosaicGenerating={isMosaicGenerating}
-      />
+      <DimensionsButtons columns={columns} rows={rows} disabled={disabled} />
       <GenerateButton
-        isMosaicGenerating={isMosaicGenerating}
-        setIsMosaicGenerating={setIsMosaicGenerating}
+        disabled={disabled}
+        setMosaicStatus={setMosaicStatus}
         resetHistory={resetHistory}
       />
     </div>

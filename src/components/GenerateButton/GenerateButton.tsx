@@ -1,17 +1,19 @@
 import styles from "./GenerateButton.module.scss";
 
 interface GenerateButtonProps {
-  isMosaicGenerating: boolean;
-  setIsMosaicGenerating: React.Dispatch<React.SetStateAction<boolean>>;
+  disabled: boolean;
+  setMosaicStatus: React.Dispatch<
+    React.SetStateAction<"idle" | "generating" | "done">
+  >;
   resetHistory(): void;
 }
 export default function GenerateButton({
-  isMosaicGenerating,
-  setIsMosaicGenerating,
+  disabled,
+  setMosaicStatus,
   resetHistory,
 }: GenerateButtonProps) {
   function handleClick() {
-    setIsMosaicGenerating(true);
+    setMosaicStatus("generating");
     resetHistory();
   }
 
@@ -20,7 +22,7 @@ export default function GenerateButton({
       type="button"
       className={styles.button}
       onClick={handleClick}
-      disabled={isMosaicGenerating}
+      disabled={disabled}
     >
       Collapse the wave function&#123;&#125;
     </button>

@@ -5,13 +5,13 @@ import styles from "./DimensionsButtons.module.scss";
 interface DimensionsButtonsProps {
   columns: number;
   rows: number;
-  isMosaicGenerating: boolean;
+  disabled: boolean;
 }
 
 export default function DimensionsButtons({
   columns,
   rows,
-  isMosaicGenerating,
+  disabled,
 }: DimensionsButtonsProps) {
   return (
     <Form className={styles.dimensionsButtons}>
@@ -20,14 +20,14 @@ export default function DimensionsButtons({
         value={columns}
         minValue={2}
         maxValue={30}
-        disabled={isMosaicGenerating}
+        disabled={disabled}
       />
       <StatefulInput
         label="rows"
         value={rows}
         minValue={2}
         maxValue={30}
-        disabled={isMosaicGenerating}
+        disabled={disabled}
       />
     </Form>
   );

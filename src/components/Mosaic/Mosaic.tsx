@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Tile from "../Tile";
 import tileset from "../../circuit-tileset/tileset";
 import styles from "./Mosaic.module.scss";
+import WrappingImage from "../WrappingImage";
 
 type tile = (typeof tileset)[number];
 interface cellData {
@@ -12,8 +13,10 @@ interface cellData {
 interface MosaicProps {
   columns: number;
   rows: number;
-  isMosaicGenerating: boolean;
-  setIsMosaicGenerating: React.Dispatch<React.SetStateAction<boolean>>;
+  mosaicStatus: "idle" | "generating" | "done";
+  setMosaicStatus: React.Dispatch<
+    React.SetStateAction<MosaicProps["mosaicStatus"]>
+  >;
   history: GridStep[];
   setHistory: React.Dispatch<React.SetStateAction<GridStep[]>>;
   resetHistory: () => void;
@@ -31,8 +34,8 @@ export interface GridStep {
 export default function Mosaic({
   columns,
   rows,
-  isMosaicGenerating,
-  setIsMosaicGenerating,
+  mosaicStatus,
+  setMosaicStatus,
   history,
   setHistory,
   resetHistory,
@@ -41,12 +44,12 @@ export default function Mosaic({
   const grid = history[history.length - 1].grid;
 
   useEffect(() => {
-    setIsMosaicGenerating(false);
+    setMosaicStatus("idle");
     resetHistory();
   }, [columns, rows]);
 
   useEffect(() => {
-    if (isMosaicGenerating) {
+    if (mosaicStatus === "generating") {
       const reachedDeadEnd = grid.some((tileOptions) => {
         return tileOptions.length === 0;
       });
@@ -105,7 +108,8 @@ export default function Mosaic({
     });
 
     if (cellsLeastOptions.length === 0) {
-      setIsMosaicGenerating(false);
+      // Wait for last animation before declaring the mosaic as done
+      setTimeout(() => setMosaicStatus("done"), 200);
       return;
     }
 
@@ -225,7 +229,9 @@ export default function Mosaic({
     return stringArray.join("");
   }
 
-  const tileSize = Math.min(1200, 0.9 * window.innerWidth) / columns;
+  const tileSize = Math.floor(
+    Math.min(1200, 0.9 * window.innerWidth) / columns
+  );
   const gridStyle: React.CSSProperties = {
     gridTemplateRows: `repeat(${rows}, ${tileSize}px)`,
     gridTemplateColumns: `repeat(${columns}, ${tileSize}px)`,
@@ -234,6 +240,13 @@ export default function Mosaic({
   if (mosaicHasSolution) {
     return (
       <div className={styles.gridWrapper}>
+        {mosaicStatus === "done" && (
+          <WrappingImage
+            gridTilesIds={grid.map((cell) => cell[0].id)}
+            columns={columns}
+            rows={rows}
+          />
+        )}
         <div className={styles.grid} style={gridStyle}>
           {grid.map((tileOptions, index) => {
             const rowStart = Math.floor(index / columns) + 1;

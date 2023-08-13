@@ -8,7 +8,8 @@ export default function Generator() {
   const { rows, columns } = useLoaderData() as Awaited<
     ReturnType<typeof loader>
   >;
-  const [isMosaicGenerating, setIsMosaicGenerating] = useState(false);
+  type MosaicStatus = "idle" | "generating" | "done";
+  const [mosaicStatus, setMosaicStatus] = useState<MosaicStatus>("idle");
 
   const gridOptions = Array(columns * rows)
     .fill(null)
@@ -30,15 +31,15 @@ export default function Generator() {
       <GeneratorControls
         columns={columns}
         rows={rows}
-        isMosaicGenerating={isMosaicGenerating}
-        setIsMosaicGenerating={setIsMosaicGenerating}
+        disabled={mosaicStatus === "generating"}
+        setMosaicStatus={setMosaicStatus}
         resetHistory={resetHistory}
       />
       <Mosaic
         columns={columns}
         rows={rows}
-        isMosaicGenerating={isMosaicGenerating}
-        setIsMosaicGenerating={setIsMosaicGenerating}
+        mosaicStatus={mosaicStatus}
+        setMosaicStatus={setMosaicStatus}
         history={history}
         setHistory={setHistory}
         resetHistory={resetHistory}
