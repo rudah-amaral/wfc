@@ -79,13 +79,13 @@ export default function WrappingImage({
   }
 
   useEffect(() => {
-    let offsetX = 1;
-    let offsetY = 1;
+    let offsetX = 2;
+    let offsetY = 2;
     const interval = setInterval(() => {
       drawPattern(offsetX, offsetY);
-      offsetX = (offsetX + 1) % canvasWidth;
-      offsetY = (offsetY + 1) % canvasHeight;
-    }, 15);
+      offsetX = (offsetX + 2) % canvasWidth;
+      offsetY = (offsetY + 2) % canvasHeight;
+    }, 1000 / 24);
 
     return () => clearInterval(interval);
   }, []);
