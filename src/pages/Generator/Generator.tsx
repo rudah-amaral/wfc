@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
 import GeneratorControls from "../../components/GeneratorControls";
-import Mosaic, { GridStep } from "../../components/Mosaic";
-import tileset from "../../circuit-tileset/tileset";
+import Mosaic from "../../components/Mosaic";
+import { generateInitialHistory } from "../../wfc-core";
 
 export default function Generator() {
   const { rows, columns } = useLoaderData() as Awaited<
@@ -11,15 +11,7 @@ export default function Generator() {
   type MosaicStatus = "idle" | "generating" | "done";
   const [mosaicStatus, setMosaicStatus] = useState<MosaicStatus>("idle");
 
-  const gridOptions = Array(columns * rows)
-    .fill(null)
-    .map(() => [...tileset]);
-  const initialHistory: GridStep[] = [
-    {
-      grid: gridOptions,
-      collapsedCell: null,
-    },
-  ];
+  const initialHistory = generateInitialHistory(columns, rows);
   let [history, setHistory] = useState(initialHistory);
 
   function resetHistory() {
