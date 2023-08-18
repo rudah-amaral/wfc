@@ -1,18 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap");
-
 .gridWrapper {
   display: flex;
   justify-content: center;
-}
-
-.grid {
-  display: grid;
-  align-items: center;
-}
-
-.cell {
-  font-family: "Major Mono Display", monospace;
-  font-weight: bolder;
-  min-height: 100%;
-  letter-spacing: -0.3em;
 }

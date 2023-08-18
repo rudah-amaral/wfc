@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Tile from "../Tile";
 import styles from "./Mosaic.module.scss";
 import WrappingImage from "../WrappingImage";
+import Grid from "../Grid";
 import {
   collapseCellWithLeastEntropy,
   undoLastGuess,
@@ -62,49 +62,18 @@ export default function Mosaic({
     }
   });
 
-  const tileSize = Math.floor(
-    Math.min(1200, 0.9 * window.innerWidth) / columns
+  if (!mosaicHasSolution) return <p>No solution</p>;
+
+  return (
+    <div className={styles.gridWrapper}>
+      {mosaicStatus === "done" && (
+        <WrappingImage
+          gridTilesIds={grid.map((cell) => cell[0].id)}
+          columns={columns}
+          rows={rows}
+        />
+      )}
+      <Grid grid={grid} columns={columns} rows={rows} />
+    </div>
   );
-  const gridStyle: React.CSSProperties = {
-    gridTemplateRows: `repeat(${rows}, ${tileSize}px)`,
-    gridTemplateColumns: `repeat(${columns}, ${tileSize}px)`,
-  };
-
-  if (mosaicHasSolution) {
-    return (
-      <div className={styles.gridWrapper}>
-        {mosaicStatus === "done" && (
-          <WrappingImage
-            gridTilesIds={grid.map((cell) => cell[0].id)}
-            columns={columns}
-            rows={rows}
-          />
-        )}
-        <div className={styles.grid} style={gridStyle}>
-          {grid.map((tileOptions, index) => {
-            const rowStart = Math.floor(index / columns) + 1;
-            const rowEnd = rowStart + 1;
-            const colStart = (index % columns) + 1;
-            const colEnd = colStart + 1;
-
-            const cellStyle: React.CSSProperties = {
-              fontSize: `${Math.floor(tileSize * 0.8)}px`,
-              gridArea: `${rowStart} / ${colStart} / ${rowEnd} / ${colEnd}`,
-            };
-
-            return (
-              <span style={cellStyle} className={styles.cell}>
-                {tileOptions.length !== 1 ? (
-                  tileOptions.length
-                ) : (
-                  <Tile id={tileOptions[0].id} size={tileSize} />
-                )}
-              </span>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-  return <p>No solution</p>;
 }
