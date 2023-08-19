@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./WrappingImage.module.scss";
 
 const tilesPath = import.meta.glob<string>("../../circuit-tileset/*.png", {
@@ -17,12 +17,15 @@ export default function WrappingImage({
   columns,
   rows,
 }: WrappingImageProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const tileSize = Math.floor(
-    Math.min(1200, window.innerWidth * 0.9) / columns
+  const [imgURL, setImageURL] = useState<string>();
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  let tileSize: number, canvasWidth: number, canvasHeight: number;
+  const scaledTileSize = Math.floor(
+    Math.min(1200, 0.9 * window.innerWidth) / columns
   );
-  const canvasWidth = tileSize * columns;
-  const canvasHeight = tileSize * rows;
+  const imgWidth = scaledTileSize * columns;
+  const imgHeight = scaledTileSize * rows;
 
   async function loadTiles() {
     const tilesetSize = Object.keys(tilesPath).length;
@@ -40,15 +43,18 @@ export default function WrappingImage({
   }
 
   async function createPatternCanvas() {
+    const tiles = await loadTiles();
+    tileSize = tiles[0].width;
+    canvasWidth = columns * tileSize;
+    canvasHeight = rows * tileSize;
+
     const patternCanvas = document.createElement("canvas");
     patternCanvas.width = canvasWidth;
     patternCanvas.height = canvasHeight;
 
     const ctx = patternCanvas.getContext("2d");
     if (!ctx) return;
-    ctx.imageSmoothingEnabled = false;
 
-    const tiles = await loadTiles();
     let offsetY = 0;
     for (let row = 0; row < rows; row++) {
       let offsetX = 0;
@@ -64,38 +70,72 @@ export default function WrappingImage({
     if (pattern) return pattern;
   }
 
-  async function drawPattern(offsetX: number, offsetY: number) {
-    if (!canvasRef.current) return;
-
-    const ctx = canvasRef.current.getContext("2d");
-    if (!ctx) return;
-
+  async function getScrollingImg() {
     const patternCanvas = await createPatternCanvas();
     if (!patternCanvas) return;
 
+    const imageCanvas = document.createElement("canvas");
+    imageCanvas.width = canvasWidth * 3;
+    imageCanvas.height = canvasHeight * 3;
+
+    const ctx = imageCanvas.getContext("2d");
+    if (!ctx) return;
+
     ctx.fillStyle = patternCanvas;
-    patternCanvas.setTransform({ e: offsetX, f: offsetY });
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    let offsetY = 0;
+    for (let row = 0; row < 3; row++) {
+      let offsetX = 0;
+      for (let column = 0; column < 3; column++) {
+        ctx.fillRect(offsetX, offsetY, canvasWidth, canvasHeight);
+        offsetX += canvasWidth;
+      }
+      offsetY += canvasHeight;
+    }
+
+    return imageCanvas.toDataURL();
   }
 
   useEffect(() => {
-    let offsetX = 2;
-    let offsetY = 2;
+    getScrollingImg().then((imageURL) => {
+      setImageURL(imageURL);
+    });
+  }, []);
+
+  let offsetX = 0;
+  let offsetY = 0;
+  const incrementX = 0.05 * scaledTileSize;
+  const incrementY = 0.05 * scaledTileSize;
+  useEffect(() => {
     const interval = setInterval(() => {
-      drawPattern(offsetX, offsetY);
-      offsetX = (offsetX + 2) % canvasWidth;
-      offsetY = (offsetY + 2) % canvasHeight;
-    }, 1000 / 24);
+      offsetX = ((offsetX + incrementX) % imgWidth) - imgWidth;
+      offsetY = ((offsetY + incrementY) % imgHeight) - imgHeight;
+
+      if (imgRef.current) {
+        imgRef.current.style.left = `${offsetX}px`;
+        imgRef.current.style.top = `${offsetY}px`;
+      }
+    }, 1000 / 60);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <canvas
-      className={styles.canvas}
-      width={canvasWidth}
-      height={canvasHeight}
-      ref={canvasRef}
-    ></canvas>
+    <div
+      className={styles.scrollingImageWrapper}
+      style={{
+        width: `${imgWidth}px`,
+        height: `${imgHeight}px`,
+      }}
+    >
+      <img
+        src={imgURL}
+        ref={imgRef}
+        className={styles.scrollingImage}
+        style={{
+          width: `${imgWidth * 3}px`,
+          height: `${imgHeight * 3}px`,
+        }}
+      />
+    </div>
   );
 }

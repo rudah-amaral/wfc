@@ -1,3 +1,9 @@
-.canvas {
+.scrollingImageWrapper {
   position: absolute;
+  overflow: hidden;
+}
+
+.scrollingImage {
+  position: absolute;
+  image-rendering: pixelated;
 }
