@@ -6,4 +6,27 @@
 .scrollingImage {
   position: absolute;
   image-rendering: pixelated;
+  animation-name: wrapX, wrapY;
+  animation-iteration-count: infinite, infinite;
+  animation-timing-function: linear, linear;
+}
+
+@keyframes wrapX {
+  from {
+    left: 0;
+  }
+
+  to {
+    left: -100%;
+  }
+}
+
+@keyframes wrapY {
+  from {
+    top: 0;
+  }
+
+  to {
+    top: -100%;
+  }
 }

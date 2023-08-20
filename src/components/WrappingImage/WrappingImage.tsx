@@ -96,27 +96,17 @@ export default function WrappingImage({
   }
 
   useEffect(() => {
-    getScrollingImg().then((imageURL) => {
+    async function setWrapAnimation() {
+      const imageURL = await getScrollingImg();
       setImageURL(imageURL);
-    });
-  }, []);
 
-  let offsetX = 0;
-  let offsetY = 0;
-  const incrementX = 0.05 * scaledTileSize;
-  const incrementY = 0.05 * scaledTileSize;
-  useEffect(() => {
-    const interval = setInterval(() => {
-      offsetX = ((offsetX + incrementX) % imgWidth) - imgWidth;
-      offsetY = ((offsetY + incrementY) % imgHeight) - imgHeight;
-
-      if (imgRef.current) {
-        imgRef.current.style.left = `${offsetX}px`;
-        imgRef.current.style.top = `${offsetY}px`;
-      }
-    }, 1000 / 60);
-
-    return () => clearInterval(interval);
+      if (!imgRef.current) return;
+      const animationDuration = tileSize * 50;
+      const xDuration = columns * animationDuration;
+      const yDuration = rows * animationDuration;
+      imgRef.current.style.animationDuration = `${xDuration}ms, ${yDuration}ms`;
+    }
+    setWrapAnimation();
   }, []);
 
   return (
