@@ -25,34 +25,48 @@ export default function StatefulInput({
     return () => stopIncrementing();
   }, []);
 
-  function increment(incrementer: number, form: HTMLFormElement) {
-    const input: HTMLInputElement = form[label];
-    const value = Number(input.value);
-    if (value + incrementer <= maxValue && value + incrementer >= minValue) {
-      input.value = (Number(input.value) + incrementer).toString();
-    }
-    submit(form, { replace: true });
-  }
-
   function startIncrementing(
-    incrementer: number,
+    incrementBy: number,
     event:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | React.TouchEvent<HTMLButtonElement>
   ) {
-    if (intervalRef.current) return;
-
     const form = event.currentTarget.form;
     if (form === null) return;
-    increment(incrementer, form);
-    intervalRef.current = setInterval(() => increment(incrementer, form), 100);
+
+    if (intervalRef.current) return;
+
+    intervalRef.current = setInterval(() => increment(incrementBy, form));
+  }
+
+  let incrementedThroughHold = 0;
+  function increment(incrementBy: number, form: HTMLFormElement) {
+    const input: HTMLInputElement = form[label];
+    const value = Number(input.value);
+    if (value + incrementBy > maxValue || value + incrementBy < minValue)
+      return;
+
+    incrementedThroughHold += 1;
+    input.value = (Number(input.value) + incrementBy).toString();
+
+    if (!intervalRef.current) return;
+
+    const decreaseFactor = 50 * Math.floor(incrementedThroughHold / 4);
+    const intervalDelay = Math.max(150 - decreaseFactor, 0);
+    clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(
+      () => increment(incrementBy, form),
+      intervalDelay
+    );
+    submit(form, { replace: true });
   }
 
   function stopIncrementing() {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
+    if (!intervalRef.current) return;
+
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+    incrementedThroughHold = 0;
   }
 
   window.addEventListener("mouseup", stopIncrementing);
