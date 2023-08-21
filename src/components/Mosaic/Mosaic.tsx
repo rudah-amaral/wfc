@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import styles from "./Mosaic.module.scss";
 import WrappingImage from "../WrappingImage";
 import Grid from "../Grid";
@@ -32,7 +32,7 @@ export default function Mosaic({
   const [mosaicHasSolution, setMosaicHasSolution] = useState(true);
   const grid = history[history.length - 1].grid;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setMosaicStatus("idle");
     resetHistory();
   }, [columns, rows]);
