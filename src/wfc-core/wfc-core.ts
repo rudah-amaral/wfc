@@ -52,7 +52,7 @@ export function undoLastGuess(history: GridStep[]) {
   // possible tiles
   const previousStep = nextHistory.length - 1;
   const previousGrid = nextHistory[previousStep].grid;
-  let fixedCell = previousGrid[failedGuess.index].filter((tileOption) => {
+  const fixedCell = previousGrid[failedGuess.index].filter((tileOption) => {
     return tileOption !== failedGuess.tile;
   });
   previousGrid[failedGuess.index] = fixedCell;
@@ -76,7 +76,7 @@ export function collapseCellWithLeastEntropy(history: GridStep[]) {
     }
   });
 
-  let cellsLeastOptions: cellData[] = [];
+  const cellsLeastOptions: cellData[] = [];
   grid.forEach((tileOptions, index) => {
     if (tileOptions.length === leastOptions) {
       cellsLeastOptions.push({ index, options: tileOptions });
@@ -108,7 +108,7 @@ export function collapseCellWithLeastEntropy(history: GridStep[]) {
 }
 
 function propagateEntropy(grid: tile[][], selectedCellIndex: number) {
-  let propagationStack: propagationStep[] = [];
+  const propagationStack: propagationStep[] = [];
   propagateToNeighbors(selectedCellIndex, propagationStack, grid);
 
   while (propagationStack.length > 0) {
@@ -183,7 +183,7 @@ function getCongruentTiles(tiles: tile[], pattern: tile[], tilesWay: number) {
     const tileEdge = reverseString(tile.edges[patternWay]);
 
     for (const comparator of pattern) {
-      let comparatorEdge = comparator.edges[tilesWay];
+      const comparatorEdge = comparator.edges[tilesWay];
       if (tileEdge === comparatorEdge) {
         tilesWithSameEdge.push(tile);
         break;
@@ -194,7 +194,7 @@ function getCongruentTiles(tiles: tile[], pattern: tile[], tilesWay: number) {
 }
 
 function reverseString(string: string) {
-  let stringArray = string.split("");
+  const stringArray = string.split("");
   stringArray.reverse();
   return stringArray.join("");
 }

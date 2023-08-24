@@ -12,7 +12,7 @@ export default function Generator() {
   const [mosaicStatus, setMosaicStatus] = useState<MosaicStatus>("idle");
 
   const initialHistory = generateInitialHistory(columns, rows);
-  let [history, setHistory] = useState(initialHistory);
+  const [history, setHistory] = useState(initialHistory);
 
   function resetHistory() {
     setHistory(initialHistory);
@@ -42,8 +42,8 @@ export default function Generator() {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  let rowsParam = url.searchParams.get("rows");
-  let columnsParam = url.searchParams.get("columns");
+  const rowsParam = url.searchParams.get("rows");
+  const columnsParam = url.searchParams.get("columns");
 
   if (rowsParam === null || columnsParam === null) {
     throw redirect("?columns=10&rows=5");
