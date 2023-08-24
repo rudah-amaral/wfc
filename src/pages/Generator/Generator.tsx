@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
 import GeneratorControls from "../../components/GeneratorControls";
 import Mosaic from "../../components/Mosaic";
@@ -11,12 +11,16 @@ export default function Generator() {
   type MosaicStatus = "idle" | "generating" | "done";
   const [mosaicStatus, setMosaicStatus] = useState<MosaicStatus>("idle");
 
-  const initialHistory = generateInitialHistory(columns, rows);
+  const initialHistory = useMemo(
+    () => generateInitialHistory(columns, rows),
+    [columns, rows]
+  );
   const [history, setHistory] = useState(initialHistory);
 
-  function resetHistory() {
-    setHistory(initialHistory);
-  }
+  const resetHistory = useCallback(
+    () => setHistory(initialHistory),
+    [initialHistory]
+  );
 
   return (
     <>

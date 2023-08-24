@@ -35,7 +35,7 @@ export default function Mosaic({
   useLayoutEffect(() => {
     setMosaicStatus("idle");
     resetHistory();
-  }, [columns, rows]);
+  }, [columns, rows, setMosaicStatus, resetHistory]);
 
   useEffect(() => {
     if (mosaicStatus !== "generating") return;
@@ -60,7 +60,7 @@ export default function Mosaic({
       // Wait for last animation before declaring the mosaic as done
       setTimeout(() => setMosaicStatus("done"), 200);
     }
-  });
+  }, [grid, history, mosaicStatus, setHistory, setMosaicStatus]);
 
   if (!mosaicHasSolution) return <p>No solution</p>;
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useSubmit } from "react-router-dom";
 import styles from "./StatefulInput.module.scss";
 
@@ -18,12 +18,9 @@ export default function StatefulInput({
   disabled,
 }: StatefulInputProps) {
   const intervalRef = useRef<null | ReturnType<typeof setInterval>>(null);
+  const incrementedThroughHoldRef = useRef(0);
 
   const submit = useSubmit();
-
-  useEffect(() => {
-    return () => stopIncrementing();
-  }, []);
 
   function startIncrementing(
     incrementBy: number,
@@ -39,19 +36,19 @@ export default function StatefulInput({
     intervalRef.current = setInterval(() => increment(incrementBy, form));
   }
 
-  let incrementedThroughHold = 0;
   function increment(incrementBy: number, form: HTMLFormElement) {
     const input: HTMLInputElement = form[label];
     const value = Number(input.value);
     if (value + incrementBy > maxValue || value + incrementBy < minValue)
       return;
 
-    incrementedThroughHold += 1;
+    incrementedThroughHoldRef.current += 1;
     input.value = (Number(input.value) + incrementBy).toString();
 
     if (!intervalRef.current) return;
 
-    const decreaseFactor = 50 * Math.floor(incrementedThroughHold / 4);
+    const decreaseFactor =
+      50 * Math.floor(incrementedThroughHoldRef.current / 4);
     const intervalDelay = Math.max(150 - decreaseFactor, 0);
     clearInterval(intervalRef.current);
     intervalRef.current = setInterval(
@@ -61,13 +58,17 @@ export default function StatefulInput({
     submit(form, { replace: true });
   }
 
-  function stopIncrementing() {
+  const stopIncrementing = useCallback(() => {
     if (!intervalRef.current) return;
 
     clearInterval(intervalRef.current);
     intervalRef.current = null;
-    incrementedThroughHold = 0;
-  }
+    incrementedThroughHoldRef.current = 0;
+  }, []);
+
+  useEffect(() => {
+    return () => stopIncrementing();
+  }, [stopIncrementing]);
 
   window.addEventListener("mouseup", stopIncrementing);
   window.addEventListener("touchend", stopIncrementing);
