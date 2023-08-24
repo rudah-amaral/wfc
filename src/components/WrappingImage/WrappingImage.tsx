@@ -45,17 +45,17 @@ export default function WrappingImage({
       const patternHeight = tileSize.current * rows;
 
       const imageCanvas = document.createElement("canvas");
-      imageCanvas.width = patternWidth * 3;
-      imageCanvas.height = patternHeight * 3;
+      imageCanvas.width = patternWidth * 2;
+      imageCanvas.height = patternHeight * 2;
 
       const ctx = imageCanvas.getContext("2d");
       if (!ctx) return;
 
       ctx.fillStyle = pattern;
       let offsetY = 0;
-      for (let row = 0; row < 3; row++) {
+      for (let row = 0; row < 2; row++) {
         let offsetX = 0;
-        for (let column = 0; column < 3; column++) {
+        for (let column = 0; column < 2; column++) {
           ctx.fillRect(offsetX, offsetY, patternWidth, patternHeight);
           offsetX += patternWidth;
         }
@@ -127,8 +127,8 @@ export default function WrappingImage({
         ref={imgRef}
         className={styles.scrollingImage}
         style={{
-          width: `${imgWidth * 3}px`,
-          height: `${imgHeight * 3}px`,
+          width: `${imgWidth * 2}px`,
+          height: `${imgHeight * 2}px`,
         }}
       />
     </div>
