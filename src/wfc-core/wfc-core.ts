@@ -28,6 +28,21 @@ export function generateInitialHistory(gridColumns: number, gridRows: number) {
   const gridOptions = Array(gridColumns * gridRows)
     .fill(null)
     .map(() => [...tileset]);
+
+  gridOptions.forEach((_, cellIndex) => {
+    getNeighborsIndexes(cellIndex).forEach((neighborIndex, neighborWay) => {
+      if (cellIndex !== neighborIndex) return;
+
+      const validTiles: tile[] = [];
+      gridOptions[cellIndex].forEach((tile) => {
+        if (getCongruentTiles([tile], [tile], neighborWay).length > 0) {
+          validTiles.push(tile);
+        }
+      });
+      gridOptions[cellIndex] = validTiles;
+    });
+  });
+
   const initialHistory: GridStep[] = [
     {
       grid: gridOptions,
@@ -109,7 +124,7 @@ export function collapseCellWithLeastEntropy(history: GridStep[]) {
 
 function propagateEntropy(grid: tile[][], selectedCellIndex: number) {
   const propagationStack: propagationStep[] = [];
-  propagateToNeighbors(selectedCellIndex, propagationStack, grid);
+  pushToPropagationStack(selectedCellIndex, propagationStack, grid);
 
   while (propagationStack.length > 0) {
     const stackTop = propagationStack[propagationStack.length - 1];
@@ -135,14 +150,14 @@ function propagateEntropy(grid: tile[][], selectedCellIndex: number) {
     const entropyReduced = newNeighborOptions.length < neighborOptions.length;
     if (entropyReduced) {
       grid[neighborIndex] = newNeighborOptions;
-      propagateToNeighbors(neighborIndex, propagationStack, grid);
+      pushToPropagationStack(neighborIndex, propagationStack, grid);
     }
   }
 
   return grid;
 }
 
-function propagateToNeighbors(
+function pushToPropagationStack(
   cellIndex: number,
   propagationStack: propagationStep[],
   grid: tile[][]

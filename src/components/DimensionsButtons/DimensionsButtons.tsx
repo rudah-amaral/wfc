@@ -18,14 +18,14 @@ export default function DimensionsButtons({
       <StatefulInput
         label="columns"
         value={columns}
-        minValue={2}
+        minValue={1}
         maxValue={30}
         disabled={disabled}
       />
       <StatefulInput
         label="rows"
         value={rows}
-        minValue={2}
+        minValue={1}
         maxValue={30}
         disabled={disabled}
       />

@@ -58,7 +58,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const urlParamsNotInt = !Number.isInteger(columns) || !Number.isInteger(rows);
   const urlParamsOutOfBounds =
-    columns > 30 || columns < 2 || rows > 30 || rows < 2;
+    columns > 30 || columns < 1 || rows > 30 || rows < 1;
   if (urlParamsNotInt || urlParamsOutOfBounds) {
     throw new Error("rows and columns should be integers between 2 and 30");
   }
