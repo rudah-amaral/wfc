@@ -65,7 +65,7 @@ export default function Mosaic({
   if (!mosaicHasSolution) return <p>No solution</p>;
 
   return (
-    <div className={styles.gridWrapper}>
+    <div className={styles.mosaicContainer}>
       {mosaicStatus === "done" && (
         <WrappingImage
           gridTilesIds={grid.map((cell) => cell[0].id)}
