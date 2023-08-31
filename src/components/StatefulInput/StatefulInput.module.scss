@@ -37,20 +37,20 @@
 
 .plusButton {
   border-top-right-radius: calc(var(--button-roundness) - 1px);
-  background-color: rgb(230, 108, 0);
+  background-color: rgb(209, 0, 166);
 }
 
 .plusButton:hover,
 .plusButton:focus {
-  background-color: scale-color($color: rgb(230, 108, 0), $lightness: 20%);
+  background-color: scale-color($color: rgb(209, 0, 166), $lightness: 20%);
 }
 
 .plusButton:active {
-  background-color: rgb(230, 108, 0);
+  background-color: rgb(209, 0, 166);
 }
 
 .plusButton:disabled {
-  background-color: scale-color($color: rgb(230, 108, 0), $saturation: -80%);
+  background-color: scale-color($color: rgb(209, 0, 166), $saturation: -50%);
 }
 
 .minusButton {
@@ -69,5 +69,5 @@
 }
 
 .minusButton:disabled {
-  background-color: scale-color($color: rgb(173, 0, 252), $saturation: -80%);
+  background-color: scale-color($color: rgb(173, 0, 252), $saturation: -50%);
 }

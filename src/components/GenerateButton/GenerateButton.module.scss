@@ -13,19 +13,19 @@
   color: white;
   font-size: 1.1rem;
   font-weight: bold;
-  background-color: #8c8cff;
+  background-color: #702e69;
   transition: background-color 100ms ease-in-out;
 }
 
 .button:hover,
 .button:focus {
-  background-color: scale-color($color: #8c8cff, $lightness: 20%);
+  background-color: scale-color($color: #702e69, $lightness: -20%);
 }
 
 .button:active {
-  background-color: #8c8cff;
+  background-color: #702e69;
 }
 
 .button:disabled {
-  background-color: scale-color($color: #8c8cff, $saturation: -80%);
+  background-color: scale-color($color: #702e69, $saturation: -50%);
 }

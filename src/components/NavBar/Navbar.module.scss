@@ -22,7 +22,7 @@
 .link {
   text-decoration: none;
   font-size: 1.3rem;
-  color: #007076;
+  color: white;
   font-weight: bold;
   padding: 0.6rem;
   border-radius: var(--button-roundness);
@@ -31,18 +31,15 @@
   outline: none;
 
   &:global.active {
-    color: white;
-    background-color: #007076;
+    background-color: lighten($color: #5e2758, $amount: 5);
   }
 
   &:hover,
   &:focus {
-    color: white;
-    background-color: lighten($color: #007076, $amount: 5);
+    background-color: #5e2758;
   }
 
   &:active {
-    color: white;
-    background-color: #007076;
+    background-color: lighten($color: #5e2758, $amount: 5);
   }
 }
