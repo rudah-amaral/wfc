@@ -51,6 +51,11 @@
   background-color: rgb(209, 0, 166);
 }
 
+.button:disabled {
+  cursor: not-allowed;
+  color: black;
+}
+
 .plusButton:disabled {
   background-color: scale-color($color: rgb(209, 0, 166), $saturation: -50%);
 }
