@@ -41,7 +41,7 @@
 }
 
 .plusButton:hover,
-.plusButton:focus {
+.plusButton:focus-visible {
   background-color: scale-color($color: rgb(209, 0, 166), $lightness: 20%);
 }
 
@@ -60,7 +60,7 @@
 }
 
 .minusButton:hover,
-.minusButton:focus {
+.minusButton:focus-visible {
   background-color: scale-color($color: rgb(173, 0, 252), $lightness: 20%);
 }
 
