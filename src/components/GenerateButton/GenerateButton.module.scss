@@ -29,6 +29,6 @@
   background-color: #702e69;
 }
 
-.button:disabled {
+.button.disabled {
   background-color: scale-color($color: #702e69, $saturation: -50%);
 }

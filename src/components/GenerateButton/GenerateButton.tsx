@@ -13,6 +13,7 @@ export default function GenerateButton({
   resetHistory,
 }: GenerateButtonProps) {
   function handleClick() {
+    if (disabled) return;
     setMosaicStatus("generating");
     resetHistory();
   }
@@ -20,9 +21,8 @@ export default function GenerateButton({
   return (
     <button
       type="button"
-      className={styles.button}
+      className={styles.button + `${disabled ? ` ${styles.disabled}` : ""}`}
       onClick={handleClick}
-      disabled={disabled}
     >
       Collapse the wave function&#123;&#125;
     </button>
