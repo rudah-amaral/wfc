@@ -1,5 +1,6 @@
 .linksList {
   display: flex;
+  gap: 15px;
   max-width: min(1200px, 90vw);
   margin: 20px auto;
   list-style: none;
@@ -7,16 +8,8 @@
   overflow-x: auto;
 }
 
-.listItem {
-  margin-right: 20px;
-
-  &:first-child {
-    margin-right: auto;
-  }
-
-  &:last-child {
-    margin-right: 0;
-  }
+.listItem:first-child {
+  margin-right: auto;
 }
 
 .link {
