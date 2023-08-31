@@ -5,7 +5,7 @@
   display: block;
   box-sizing: border-box;
   appearance: none;
-  border: 1px solid black;
+  border: 3px solid var(--border-color);
   border-radius: var(--button-roundness);
   outline: none;
   cursor: pointer;

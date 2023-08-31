@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   max-width: 200px;
-  border: 1px solid black;
+  border: var(--border-thickness) solid var(--border-color);
   border-radius: var(--button-roundness);
   font-weight: bold;
   font-size: 1.5rem;
@@ -27,7 +27,7 @@
   appearance: none;
   border: 0;
   background-color: white;
-  border-left: 1px solid black;
+  border-left: var(--border-thickness) solid var(--border-color);
   font-weight: inherit;
   font-size: inherit;
   cursor: pointer;
@@ -36,7 +36,9 @@
 }
 
 .plusButton {
-  border-top-right-radius: calc(var(--button-roundness) - 1px);
+  border-top-right-radius: calc(
+    var(--button-roundness) - var(--border-thickness)
+  );
   background-color: rgb(209, 0, 166);
 }
 
@@ -54,8 +56,10 @@
 }
 
 .minusButton {
-  border-top: 1px solid black;
-  border-bottom-right-radius: calc(var(--button-roundness) - 1px);
+  border-top: var(--border-thickness) solid var(--border-color);
+  border-bottom-right-radius: calc(
+    var(--button-roundness) - var(--border-thickness)
+  );
   background-color: rgb(173, 0, 252);
 }
 
