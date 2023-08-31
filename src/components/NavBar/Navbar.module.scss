@@ -5,9 +5,10 @@
   display: flex;
   gap: 15px;
   max-width: min(1200px, 90vw);
-  margin: 20px auto;
+  margin: 0 auto;
   list-style: none;
-  padding: 0;
+  font-size: clamp(0.8rem, 1.9vw, 1.3rem);
+  padding: 1em 0;
   overflow-x: auto;
 }
 
@@ -17,10 +18,9 @@
 
 .link {
   text-decoration: none;
-  font-size: 1.3rem;
   color: white;
   font-weight: bold;
-  padding: 0.6rem;
+  padding: 0.8em;
   border-radius: var(--button-roundness);
   display: inline-block;
   transition: background-color 100ms;
