@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useSubmit } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import styles from "./StatefulInput.module.scss";
 
 interface StatefulInputProps {
-  value: number;
-  label: string;
+  searchParamKey: string;
   minValue: number;
   maxValue: number;
   disabled: boolean;
 }
 
 export default function StatefulInput({
-  label,
-  value,
+  searchParamKey,
   minValue,
   maxValue,
   disabled,
@@ -20,30 +18,23 @@ export default function StatefulInput({
   const intervalRef = useRef<null | ReturnType<typeof setInterval>>(null);
   const incrementedThroughHoldRef = useRef(0);
 
-  const submit = useSubmit();
+  const [searchParams, setSearchParams] = useSearchParams();
+  let searchParamValue = Number(searchParams.get(searchParamKey));
 
-  function startIncrementing(
-    incrementBy: number,
-    event:
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.TouchEvent<HTMLButtonElement>
-  ) {
-    const form = event.currentTarget.form;
-    if (form === null) return;
-
+  function startIncrementing(incrementBy: number) {
     if (intervalRef.current) return;
 
-    intervalRef.current = setInterval(() => increment(incrementBy, form));
+    intervalRef.current = setInterval(() => increment(incrementBy));
   }
 
-  function increment(incrementBy: number, form: HTMLFormElement) {
-    const input: HTMLInputElement = form[label];
-    const value = Number(input.value);
-    if (value + incrementBy > maxValue || value + incrementBy < minValue)
+  function increment(incrementBy: number) {
+    if (
+      searchParamValue + incrementBy > maxValue ||
+      searchParamValue + incrementBy < minValue
+    )
       return;
 
     incrementedThroughHoldRef.current += 1;
-    input.value = (Number(input.value) + incrementBy).toString();
 
     if (!intervalRef.current) return;
 
@@ -52,10 +43,14 @@ export default function StatefulInput({
     const intervalDelay = Math.max(150 - decreaseFactor, 0);
     clearInterval(intervalRef.current);
     intervalRef.current = setInterval(
-      () => increment(incrementBy, form),
+      () => increment(incrementBy),
       intervalDelay
     );
-    submit(form, { replace: true });
+    setSearchParams((next) => {
+      searchParamValue += incrementBy;
+      next.set(searchParamKey, searchParamValue.toString());
+      return next;
+    });
   }
 
   const stopIncrementing = useCallback(() => {
@@ -77,21 +72,15 @@ export default function StatefulInput({
   return (
     <div className={styles.inputWrapper}>
       <div className={styles.valueWrapper}>
-        <label>{label}:</label>
-        <input
-          name={label}
-          value={value}
-          readOnly
-          style={{
-            all: "unset",
-            width: "100%",
-          }}
-        />
+        <span>
+          {searchParamKey}: {searchParamValue}
+        </span>
       </div>
       <div className={styles.buttonsWrapper}>
         <button
-          onMouseDown={(e) => startIncrementing(1, e)}
-          onTouchStart={(e) => startIncrementing(1, e)}
+          type="button"
+          onMouseDown={() => startIncrementing(1)}
+          onTouchStart={() => startIncrementing(1)}
           onContextMenu={(e) => e.preventDefault()}
           className={`${styles.button} ${styles.plusButton}`}
           disabled={disabled}
@@ -99,8 +88,9 @@ export default function StatefulInput({
           +
         </button>
         <button
-          onMouseDown={(e) => startIncrementing(-1, e)}
-          onTouchStart={(e) => startIncrementing(-1, e)}
+          type="button"
+          onMouseDown={() => startIncrementing(-1)}
+          onTouchStart={() => startIncrementing(-1)}
           onContextMenu={(e) => e.preventDefault()}
           className={`${styles.button} ${styles.minusButton}`}
           disabled={disabled}

@@ -25,8 +25,6 @@ export default function Generator() {
   return (
     <>
       <GeneratorControls
-        columns={columns}
-        rows={rows}
         disabled={mosaicStatus === "generating"}
         setMosaicStatus={setMosaicStatus}
         resetHistory={resetHistory}
