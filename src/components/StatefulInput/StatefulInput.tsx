@@ -65,10 +65,19 @@ export default function StatefulInput({
     return () => stopIncrementing();
   }, [stopIncrementing]);
 
-  window.addEventListener("mouseup", stopIncrementing);
-  window.addEventListener("touchend", stopIncrementing);
-  window.addEventListener("touchcancel", stopIncrementing);
-  window.addEventListener("keyup", stopIncrementing);
+  useEffect(() => {
+    window.addEventListener("mouseup", stopIncrementing);
+    window.addEventListener("touchend", stopIncrementing);
+    window.addEventListener("touchcancel", stopIncrementing);
+    window.addEventListener("keyup", stopIncrementing);
+
+    return () => {
+      window.removeEventListener("mouseup", stopIncrementing);
+      window.removeEventListener("touchend", stopIncrementing);
+      window.removeEventListener("touchcancel", stopIncrementing);
+      window.removeEventListener("keyup", stopIncrementing);
+    };
+  }, [stopIncrementing]);
 
   return (
     <div className={styles.inputWrapper}>
