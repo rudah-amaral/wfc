@@ -79,9 +79,8 @@ export default function StatefulInput({
       <div className={styles.buttonsWrapper}>
         <button
           type="button"
-          onMouseDown={() => startIncrementing(1)}
+          onMouseDown={(e) => e.button === 0 && startIncrementing(1)}
           onTouchStart={() => startIncrementing(1)}
-          onContextMenu={(e) => e.preventDefault()}
           className={`${styles.button} ${styles.plusButton}`}
           disabled={disabled}
         >
@@ -89,9 +88,8 @@ export default function StatefulInput({
         </button>
         <button
           type="button"
-          onMouseDown={() => startIncrementing(-1)}
+          onMouseDown={(e) => e.button === 0 && startIncrementing(-1)}
           onTouchStart={() => startIncrementing(-1)}
-          onContextMenu={(e) => e.preventDefault()}
           className={`${styles.button} ${styles.minusButton}`}
           disabled={disabled}
         >
