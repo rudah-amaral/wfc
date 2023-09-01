@@ -68,6 +68,7 @@ export default function StatefulInput({
   window.addEventListener("mouseup", stopIncrementing);
   window.addEventListener("touchend", stopIncrementing);
   window.addEventListener("touchcancel", stopIncrementing);
+  window.addEventListener("keyup", stopIncrementing);
 
   return (
     <div className={styles.inputWrapper}>
@@ -79,6 +80,7 @@ export default function StatefulInput({
       <div className={styles.buttonsWrapper}>
         <button
           type="button"
+          onKeyDown={(e) => e.key === "Enter" && startIncrementing(1)}
           onMouseDown={(e) => e.button === 0 && startIncrementing(1)}
           onTouchStart={() => startIncrementing(1)}
           className={`${styles.button} ${styles.plusButton}`}
@@ -88,6 +90,7 @@ export default function StatefulInput({
         </button>
         <button
           type="button"
+          onKeyDown={(e) => e.key === "Enter" && startIncrementing(-1)}
           onMouseDown={(e) => e.button === 0 && startIncrementing(-1)}
           onTouchStart={() => startIncrementing(-1)}
           className={`${styles.button} ${styles.minusButton}`}
