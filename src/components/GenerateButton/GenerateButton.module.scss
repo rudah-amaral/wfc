@@ -1,22 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
 .button {
-  font-family: "Poppins", sans-serif;
-  display: block;
-  box-sizing: border-box;
-  appearance: none;
+  width: 100%;
+  background-color: #702e69;
   border: 3px solid var(--border-color);
   border-radius: var(--button-roundness);
   outline: none;
-  cursor: pointer;
-  margin: 20px auto;
-  padding: 1rem;
-  width: 100%;
-  max-width: 405px;
-  color: white;
-  font-size: 1.1rem;
+  margin: 0.6em auto 0;
+  padding: 0.7em;
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(0.7rem, 5vw, 1.4rem);
   font-weight: bold;
-  background-color: #702e69;
+  color: white;
+  cursor: pointer;
   transition: background-color 100ms ease-in-out;
 }
 

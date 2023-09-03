@@ -1,44 +1,50 @@
 .inputWrapper {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  max-width: 200px;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "value increase" "value decrease";
+  gap: 3px;
+  width: 50%;
+  font-family: "Poppins", sans-serif;
+  font-weight: bold;
+  font-size: clamp(0.5rem, 6vw, 1.5rem);
   border: var(--border-thickness) solid var(--border-color);
   border-radius: var(--button-roundness);
-  font-weight: bold;
-  font-size: 1.5rem;
-  flex-grow: 1;
+  background-color: var(--border-color);
 }
 
 .valueWrapper {
-  padding: 0 0.4rem;
-  text-align: center;
-  flex-grow: 1;
+  grid-area: value;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(57, 29, 54);
+  border-radius: var(--inner-button-roundness) 0 0 var(--inner-button-roundness);
 }
 
-.buttonsWrapper {
-  display: flex;
-  flex-direction: column;
+.value {
+  text-align: center;
+  max-width: min-content;
 }
 
 .button {
-  min-width: 50px;
-  padding: 0.5rem;
-  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
   border: 0;
-  background-color: white;
-  border-left: var(--border-thickness) solid var(--border-color);
-  font-weight: inherit;
-  font-size: inherit;
-  cursor: pointer;
   outline: none;
+  aspect-ratio: 1 / 1;
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(0.8rem, 9vw, 2rem);
+  font-weight: 900;
+  cursor: pointer;
   transition: background-color 100ms ease-in-out;
 }
 
 .plusButton {
-  border-top-right-radius: calc(
-    var(--button-roundness) - var(--border-thickness)
-  );
+  grid-area: increase;
+  border-radius: 0 var(--inner-button-roundness) 0 0;
   background-color: rgb(209, 0, 166);
 }
 
@@ -61,10 +67,8 @@
 }
 
 .minusButton {
-  border-top: var(--border-thickness) solid var(--border-color);
-  border-bottom-right-radius: calc(
-    var(--button-roundness) - var(--border-thickness)
-  );
+  grid-area: decrease;
+  border-radius: 0 0 var(--inner-button-roundness) 0;
   background-color: rgb(173, 0, 252);
 }
 
@@ -79,4 +83,29 @@
 
 .minusButton:disabled {
   background-color: scale-color($color: rgb(173, 0, 252), $saturation: -50%);
+}
+
+@media (max-width: 300px) {
+  .inputWrapper {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 3fr 2fr;
+    grid-template-areas: "value value" "decrease increase";
+  }
+
+  .valueWrapper {
+    border-radius: var(--inner-button-roundness) var(--inner-button-roundness) 0
+      0;
+  }
+
+  .button {
+    aspect-ratio: unset;
+  }
+
+  .plusButton {
+    border-radius: 0 0 var(--inner-button-roundness) 0;
+  }
+
+  .minusButton {
+    border-radius: 0 0 0 var(--inner-button-roundness);
+  }
 }

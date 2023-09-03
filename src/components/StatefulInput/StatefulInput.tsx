@@ -82,32 +82,30 @@ export default function StatefulInput({
   return (
     <div className={styles.inputWrapper}>
       <div className={styles.valueWrapper}>
-        <span>
+        <span className={styles.value}>
           {searchParamKey}: {searchParamValue}
         </span>
       </div>
-      <div className={styles.buttonsWrapper}>
-        <button
-          type="button"
-          onKeyDown={(e) => e.key === "Enter" && startIncrementing(1)}
-          onMouseDown={(e) => e.button === 0 && startIncrementing(1)}
-          onTouchStart={() => startIncrementing(1)}
-          className={`${styles.button} ${styles.plusButton}`}
-          disabled={disabled}
-        >
-          +
-        </button>
-        <button
-          type="button"
-          onKeyDown={(e) => e.key === "Enter" && startIncrementing(-1)}
-          onMouseDown={(e) => e.button === 0 && startIncrementing(-1)}
-          onTouchStart={() => startIncrementing(-1)}
-          className={`${styles.button} ${styles.minusButton}`}
-          disabled={disabled}
-        >
-          -
-        </button>
-      </div>
+      <button
+        type="button"
+        onKeyDown={(e) => e.key === "Enter" && startIncrementing(1)}
+        onMouseDown={(e) => e.button === 0 && startIncrementing(1)}
+        onTouchStart={() => startIncrementing(1)}
+        className={`${styles.button} ${styles.plusButton}`}
+        disabled={disabled}
+      >
+        +
+      </button>
+      <button
+        type="button"
+        onKeyDown={(e) => e.key === "Enter" && startIncrementing(-1)}
+        onMouseDown={(e) => e.button === 0 && startIncrementing(-1)}
+        onTouchStart={() => startIncrementing(-1)}
+        className={`${styles.button} ${styles.minusButton}`}
+        disabled={disabled}
+      >
+        -
+      </button>
     </div>
   );
 }
