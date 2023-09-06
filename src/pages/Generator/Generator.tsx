@@ -8,7 +8,7 @@ export default function Generator() {
   const { rows, columns } = useLoaderData() as Awaited<
     ReturnType<typeof loader>
   >;
-  type MosaicStatus = "idle" | "generating" | "done";
+  type MosaicStatus = "idle" | "generating" | "done" | "no solution";
   const [mosaicStatus, setMosaicStatus] = useState<MosaicStatus>("idle");
 
   const initialHistory = useMemo(

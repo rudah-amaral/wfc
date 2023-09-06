@@ -3,7 +3,7 @@ import styles from "./GenerateButton.module.scss";
 interface GenerateButtonProps {
   disabled: boolean;
   setMosaicStatus: React.Dispatch<
-    React.SetStateAction<"idle" | "generating" | "done">
+    React.SetStateAction<"idle" | "generating" | "done" | "no solution">
   >;
   resetHistory(): void;
 }

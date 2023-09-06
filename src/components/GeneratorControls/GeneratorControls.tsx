@@ -5,7 +5,7 @@ import styles from "./GeneratorControls.module.scss";
 interface GeneratorControlsProps {
   disabled: boolean;
   setMosaicStatus: React.Dispatch<
-    React.SetStateAction<"idle" | "generating" | "done">
+    React.SetStateAction<"idle" | "generating" | "done" | "no solution">
   >;
   resetHistory(): void;
 }

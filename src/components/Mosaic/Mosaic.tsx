@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import styles from "./Mosaic.module.scss";
 import WrappingImage from "../WrappingImage";
 import Grid from "../Grid";
@@ -11,7 +11,7 @@ import {
 interface MosaicProps {
   columns: number;
   rows: number;
-  mosaicStatus: "idle" | "generating" | "done";
+  mosaicStatus: "idle" | "generating" | "done" | "no solution";
   setMosaicStatus: React.Dispatch<
     React.SetStateAction<MosaicProps["mosaicStatus"]>
   >;
@@ -29,7 +29,6 @@ export default function Mosaic({
   setHistory,
   resetHistory,
 }: MosaicProps) {
-  const [mosaicHasSolution, setMosaicHasSolution] = useState(true);
   const grid = history[history.length - 1].grid;
 
   useLayoutEffect(() => {
@@ -48,7 +47,7 @@ export default function Mosaic({
       if (previousHistory) {
         setHistory(previousHistory);
       } else {
-        setMosaicHasSolution(false);
+        setMosaicStatus("no solution");
       }
       return;
     }
@@ -62,7 +61,7 @@ export default function Mosaic({
     }
   }, [grid, history, mosaicStatus, setHistory, setMosaicStatus]);
 
-  if (!mosaicHasSolution) return <p>No solution</p>;
+  if (mosaicStatus === "no solution") return <p>No solution</p>;
 
   return (
     <div className={styles.mosaicContainer}>
