@@ -19,7 +19,6 @@ export default function WrappingImage({
 }: WrappingImageProps) {
   const [imgURL, setImageURL] = useState<string>();
   const imgRef = useRef<HTMLImageElement>(null);
-  const tileSize = useRef<number | null>(null);
 
   const scaledTileSize = Math.floor(
     Math.min(1200, 0.9 * window.innerWidth) / columns
@@ -28,10 +27,11 @@ export default function WrappingImage({
   const imgHeight = scaledTileSize * rows;
 
   useEffect(() => {
+    let patternTileSize: number;
     setScrollingImgURL().then(() => {
       if (!imgRef.current) return;
 
-      const animationDuration = tileSize.current! * 50;
+      const animationDuration = patternTileSize * 50;
       const xDuration = columns * animationDuration;
       const yDuration = rows * animationDuration;
       imgRef.current.style.animationDuration = `${xDuration}ms, ${yDuration}ms`;
@@ -39,10 +39,10 @@ export default function WrappingImage({
 
     async function setScrollingImgURL() {
       const pattern = await createPattern();
-      if (!pattern || !tileSize.current) return;
+      if (!pattern || !patternTileSize) return;
 
-      const patternWidth = tileSize.current * columns;
-      const patternHeight = tileSize.current * rows;
+      const patternWidth = patternTileSize * columns;
+      const patternHeight = patternTileSize * rows;
 
       const imageCanvas = document.createElement("canvas");
       imageCanvas.width = patternWidth * 2;
@@ -67,11 +67,11 @@ export default function WrappingImage({
 
     async function createPattern() {
       const tiles = await loadTiles();
-      tileSize.current = tiles[0].width;
+      patternTileSize = tiles[0].width;
 
       const canvas = document.createElement("canvas");
-      canvas.width = tileSize.current * columns;
-      canvas.height = tileSize.current * rows;
+      canvas.width = patternTileSize * columns;
+      canvas.height = patternTileSize * rows;
 
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
@@ -86,12 +86,12 @@ export default function WrappingImage({
             tiles[tileId],
             offsetX,
             offsetY,
-            tileSize.current,
-            tileSize.current
+            patternTileSize,
+            patternTileSize
           );
-          offsetX += tileSize.current;
+          offsetX += patternTileSize;
         }
-        offsetY += tileSize.current;
+        offsetY += patternTileSize;
       }
 
       const pattern = ctx.createPattern(canvas, "repeat");
