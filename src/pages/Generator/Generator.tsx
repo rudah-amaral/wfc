@@ -4,10 +4,10 @@ import GeneratorControls from "../../components/GeneratorControls";
 import Mosaic from "../../components/Mosaic";
 import { generateInitialHistory } from "../../wfc-core";
 
+export type returnOfGeneratorLoader = Awaited<ReturnType<typeof loader>>;
+
 export default function Generator() {
-  const { rows, columns } = useLoaderData() as Awaited<
-    ReturnType<typeof loader>
-  >;
+  const { rows, columns } = useLoaderData() as returnOfGeneratorLoader;
   document.documentElement.style.setProperty("--rows", rows.toString());
   document.documentElement.style.setProperty("--columns", columns.toString());
   type MosaicStatus = "idle" | "generating" | "done" | "no solution";
@@ -32,8 +32,6 @@ export default function Generator() {
         resetHistory={resetHistory}
       />
       <Mosaic
-        columns={columns}
-        rows={rows}
         mosaicStatus={mosaicStatus}
         setMosaicStatus={setMosaicStatus}
         history={history}

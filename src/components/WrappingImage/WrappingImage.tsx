@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { useLoaderData } from "react-router-dom";
+import { returnOfGeneratorLoader } from "../../pages/Generator/Generator";
 import styles from "./WrappingImage.module.scss";
 
 const tilesPath = import.meta.glob<string>("../../circuit-tileset/*.png", {
@@ -8,17 +10,12 @@ const tilesPath = import.meta.glob<string>("../../circuit-tileset/*.png", {
 
 interface WrappingImageProps {
   gridTilesIds: number[];
-  columns: number;
-  rows: number;
 }
 
-export default function WrappingImage({
-  gridTilesIds,
-  columns,
-  rows,
-}: WrappingImageProps) {
+export default function WrappingImage({ gridTilesIds }: WrappingImageProps) {
   const [imgURL, setImageURL] = useState<string>();
   const imgRef = useRef<HTMLImageElement>(null);
+  const { rows, columns } = useLoaderData() as returnOfGeneratorLoader;
 
   useEffect(() => {
     let patternTileSize: number;

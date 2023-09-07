@@ -9,8 +9,6 @@ import {
 } from "../../wfc-core";
 
 interface MosaicProps {
-  columns: number;
-  rows: number;
   mosaicStatus: "idle" | "generating" | "done" | "no solution";
   setMosaicStatus: React.Dispatch<
     React.SetStateAction<MosaicProps["mosaicStatus"]>
@@ -21,8 +19,6 @@ interface MosaicProps {
 }
 
 export default function Mosaic({
-  columns,
-  rows,
   mosaicStatus,
   setMosaicStatus,
   history,
@@ -34,7 +30,7 @@ export default function Mosaic({
   useLayoutEffect(() => {
     setMosaicStatus("idle");
     resetHistory();
-  }, [columns, rows, setMosaicStatus, resetHistory]);
+  }, [setMosaicStatus, resetHistory]);
 
   useEffect(() => {
     if (mosaicStatus !== "generating") return;
@@ -66,13 +62,9 @@ export default function Mosaic({
   return (
     <div className={styles.mosaicContainer}>
       {mosaicStatus === "done" && (
-        <WrappingImage
-          gridTilesIds={grid.map((cell) => cell[0].id)}
-          columns={columns}
-          rows={rows}
-        />
+        <WrappingImage gridTilesIds={grid.map((cell) => cell[0].id)} />
       )}
-      <Grid grid={grid} columns={columns} />
+      <Grid grid={grid} />
     </div>
   );
 }
