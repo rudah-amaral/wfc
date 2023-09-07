@@ -72,7 +72,7 @@ export default function Mosaic({
           rows={rows}
         />
       )}
-      <Grid grid={grid} columns={columns} rows={rows} />
+      <Grid grid={grid} columns={columns} />
     </div>
   );
 }

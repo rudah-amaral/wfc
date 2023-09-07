@@ -7,12 +7,9 @@ const tilesPath = import.meta.glob<string>("../../circuit-tileset/*.png", {
 
 interface TileProps {
   id: number;
-  size: number;
 }
 
-export default function Tile({ id, size }: TileProps) {
+export default function Tile({ id }: TileProps) {
   const tilePath = tilesPath[`../../circuit-tileset/${id}.png`];
-  return (
-    <img src={tilePath} width={size} height={size} className={styles.tile} />
-  );
+  return <img src={tilePath} className={styles.tile} />;
 }

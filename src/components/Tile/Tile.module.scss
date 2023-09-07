@@ -1,5 +1,7 @@
 .tile {
   display: block;
+  width: var(--tile-size);
+  height: var(--tile-size);
   image-rendering: pixelated;
   animation-name: pop;
   animation-duration: 200ms;

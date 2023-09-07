@@ -8,6 +8,8 @@ export default function Generator() {
   const { rows, columns } = useLoaderData() as Awaited<
     ReturnType<typeof loader>
   >;
+  document.documentElement.style.setProperty("--rows", rows.toString());
+  document.documentElement.style.setProperty("--columns", columns.toString());
   type MosaicStatus = "idle" | "generating" | "done" | "no solution";
   const [mosaicStatus, setMosaicStatus] = useState<MosaicStatus>("idle");
 

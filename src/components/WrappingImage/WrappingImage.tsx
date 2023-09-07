@@ -20,12 +20,6 @@ export default function WrappingImage({
   const [imgURL, setImageURL] = useState<string>();
   const imgRef = useRef<HTMLImageElement>(null);
 
-  const scaledTileSize = Math.floor(
-    Math.min(1200, 0.9 * window.innerWidth) / columns
-  );
-  const imgWidth = scaledTileSize * columns;
-  const imgHeight = scaledTileSize * rows;
-
   useEffect(() => {
     let patternTileSize: number;
     setScrollingImgURL().then(() => {
@@ -115,22 +109,8 @@ export default function WrappingImage({
   }, [columns, rows, gridTilesIds]);
 
   return (
-    <div
-      className={styles.scrollingImageWrapper}
-      style={{
-        width: `${imgWidth}px`,
-        height: `${imgHeight}px`,
-      }}
-    >
-      <img
-        src={imgURL}
-        ref={imgRef}
-        className={styles.scrollingImage}
-        style={{
-          width: `${imgWidth * 2}px`,
-          height: `${imgHeight * 2}px`,
-        }}
-      />
+    <div className={styles.scrollingImageWrapper}>
+      <img src={imgURL} ref={imgRef} className={styles.scrollingImage} />
     </div>
   );
 }

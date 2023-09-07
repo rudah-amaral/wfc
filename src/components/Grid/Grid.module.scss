@@ -3,6 +3,8 @@
 .grid {
   display: grid;
   align-items: center;
+  grid-template-rows: repeat(var(--rows), var(--tile-size));
+  grid-template-columns: repeat(var(--columns), var(--tile-size));
 }
 
 .cell {
@@ -10,4 +12,5 @@
   font-weight: bolder;
   min-height: 100%;
   letter-spacing: -0.3em;
+  font-size: calc(var(--tile-size) * 0.8);
 }

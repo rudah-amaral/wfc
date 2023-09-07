@@ -5,6 +5,9 @@
   --inner-button-roundness: calc(
     var(--button-roundness) - var(--border-thickness)
   );
+  --tile-size: min(calc(50vh / var(--rows)), calc(90vw / var(--columns)));
+  --mosaic-width: calc(var(--tile-size) * var(--columns));
+  --mosaic-height: calc(var(--tile-size) * var(--rows));
 }
 
 html {

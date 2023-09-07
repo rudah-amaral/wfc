@@ -1,6 +1,8 @@
 .scrollingImageWrapper {
   position: absolute;
   overflow: hidden;
+  width: var(--mosaic-width);
+  height: var(--mosaic-height);
 }
 
 .scrollingImage {
@@ -10,6 +12,8 @@
   animation-iteration-count: infinite, infinite;
   animation-timing-function: linear, linear;
   animation-delay: 200ms, 200ms;
+  width: calc(var(--mosaic-width) * 2);
+  height: calc(var(--mosaic-height) * 2);
 }
 
 @keyframes wrapX {
