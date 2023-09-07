@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@700&display=swap");
 
 .grid {
   display: grid;
@@ -8,9 +8,11 @@
 }
 
 .cell {
-  font-family: "Major Mono Display", monospace;
-  font-weight: bolder;
+  font-family: "Chivo Mono", monospace;
+  font-weight: bold;
   min-height: 100%;
-  letter-spacing: -0.3em;
-  font-size: calc(var(--tile-size) * 0.8);
+  font-size: calc(var(--tile-size) * 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
