@@ -1,5 +1,7 @@
 .mosaicContainer {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: clamp(0.8rem, 5vw, 3rem);
+  min-height: var(--mosaic-max-height);
 }
