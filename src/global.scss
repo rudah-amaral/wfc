@@ -17,7 +17,6 @@
 }
 
 html {
-  height: 100%;
   background: rgb(57, 29, 54);
   color: white;
   font-family: "Inter", sans-serif;
@@ -25,11 +24,10 @@ html {
 
 body {
   margin: 0;
-  height: 100%;
 }
 
 #root {
-  min-height: 100%;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
