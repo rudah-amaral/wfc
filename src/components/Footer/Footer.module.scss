@@ -1,0 +1,44 @@
+.footer {
+  background-color: rgba(#000000, 60%);
+  font-size: clamp(0.7rem, 1.5vw, 1rem);
+  padding: 3em;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  margin: 0 0 1.5em;
+}
+
+.list {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, max-content));
+  overflow: auto;
+  justify-content: space-between;
+  row-gap: 1.5em;
+}
+
+.listItem {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.3em;
+  border-left: 1px dashed #e077d3;
+  padding-left: 0.6em;
+}
+
+.contactLocation {
+  font-weight: bold;
+}
+
+.link {
+  color: #e077d3;
+}
+
+.link:hover {
+  color: lighten($color: #e077d3, $amount: 10%);
+}

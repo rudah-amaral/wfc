@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+
 :root {
   --button-roundness: 10px;
   --border-thickness: 3px;
@@ -11,10 +13,19 @@
 }
 
 html {
+  height: 100%;
   background: rgb(57, 29, 54);
   color: white;
+  font-family: "Inter", sans-serif;
 }
 
 body {
   margin: 0;
+  height: 100%;
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
