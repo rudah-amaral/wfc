@@ -1,14 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
+.header {
+  background-color: #391d36;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
 .linksList {
   font-family: "Poppins", sans-serif;
   display: flex;
-  gap: 15px;
+  gap: 30px;
   max-width: min(1200px, 90vw);
   margin: 0 auto;
   list-style: none;
-  font-size: clamp(0.8rem, 1.9vw, 1.3rem);
-  padding: 1em 0;
+  font-size: clamp(0.8rem, 4.6vw, 1.1rem);
+  padding: 0.8em 0;
   overflow-x: auto;
 }
 
@@ -18,24 +23,16 @@
 
 .link {
   text-decoration: none;
-  color: white;
-  font-weight: bold;
-  padding: 0.8em;
-  border-radius: var(--button-roundness);
-  display: inline-block;
-  transition: background-color 100ms;
-  outline: none;
+  color: #bbb;
+  transition: color 100ms;
 
   &:global.active {
-    background-color: lighten($color: #5e2758, $amount: 5);
+    font-weight: 700;
+    color: white;
   }
 
   &:hover,
   &:focus-visible {
-    background-color: #5e2758;
-  }
-
-  &:active {
-    background-color: lighten($color: #5e2758, $amount: 5);
+    color: white;
   }
 }
