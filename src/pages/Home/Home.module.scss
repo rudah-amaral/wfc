@@ -1,8 +1,59 @@
-.paragraphs {
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+.container {
   max-width: min(1200px, 90vw);
-  margin: 0 auto;
+  font-size: clamp(0.5rem, 3vw, 2rem);
+  margin: 4em auto;
 }
 
-.paragraph {
-  font-size: 1.2rem;
+.title {
+  text-transform: uppercase;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.subtitle {
+  max-width: 40ch;
+  margin-block: 1.2em;
+  line-height: 1.6;
+  font-size: clamp(0.8rem, 2.5vw, 1.6rem);
+  font-weight: normal;
+}
+
+.buttons {
+  font-size: clamp(0.7rem, 2.3vw, 1.3rem);
+  display: flex;
+  column-gap: 20px;
+}
+
+.buttonLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #5e2758;
+  padding: 1.3em;
+  border-radius: var(--button-roundness);
+  outline: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  color: white;
+  transition: background-color 100ms;
+
+  &:hover,
+  &:focus {
+    background-color: lighten($color: #5e2758, $amount: 5%);
+  }
+
+  &:active {
+    background-color: #5e2758;
+  }
+}
+
+@media (max-width: 300px) {
+  .buttons {
+    flex-direction: column;
+    row-gap: 10px;
+  }
 }
