@@ -4,7 +4,8 @@
   height: var(--tile-size);
   image-rendering: pixelated;
   animation-name: pop;
-  animation-duration: 200ms;
+  animation-duration: var(--tile-animation-delay);
+  animation-timing-function: ease-out;
 }
 
 @keyframes pop {

@@ -26,6 +26,11 @@ export default function Mosaic({
   resetHistory,
 }: MosaicProps) {
   const grid = history[history.length - 1].grid;
+  const tileAnimationDelay = 300;
+  document.documentElement.style.setProperty(
+    "--tile-animation-delay",
+    `${tileAnimationDelay}ms`
+  );
 
   useLayoutEffect(() => {
     setMosaicStatus("idle");
@@ -53,7 +58,7 @@ export default function Mosaic({
       setHistory(nextHistory);
     } else {
       // Wait for last animation before declaring the mosaic as done
-      setTimeout(() => setMosaicStatus("done"), 200);
+      setTimeout(() => setMosaicStatus("done"), tileAnimationDelay);
     }
   }, [grid, history, mosaicStatus, setHistory, setMosaicStatus]);
 
