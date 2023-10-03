@@ -1,7 +1,7 @@
 import { isRouteErrorResponse, Link, useRouteError } from "react-router-dom";
 import styles from "./GeneratorError.module.scss";
 
-export default function GeneratorError() {
+export function GeneratorError() {
   const error = useRouteError();
 
   let errorMessage: string;

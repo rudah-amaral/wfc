@@ -1,2 +1,2 @@
-export { default, loader } from "./Generator";
-export { default as GeneratorError } from "./GeneratorError";
+export { Generator, loader as generatorLoader } from "./Generator";
+export { GeneratorError } from "./GeneratorError";

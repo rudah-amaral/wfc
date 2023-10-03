@@ -6,7 +6,7 @@ import { generateInitialHistory } from "@/wfc-core";
 
 export type returnOfGeneratorLoader = Awaited<ReturnType<typeof loader>>;
 
-export default function Generator() {
+export function Generator() {
   const { rows, columns } = useLoaderData() as returnOfGeneratorLoader;
   document.documentElement.style.setProperty("--rows", rows.toString());
   document.documentElement.style.setProperty("--columns", columns.toString());

@@ -10,10 +10,7 @@ import "@/global.scss";
 import NavBar from "@/components/NavBar";
 
 import Home from "@/pages/Home";
-import Generator, {
-  loader as appLoader,
-  GeneratorError,
-} from "@/pages/Generator";
+import { Generator, generatorLoader, GeneratorError } from "@/pages/Generator";
 import About from "@/pages/About";
 
 const router = createHashRouter(
@@ -23,7 +20,7 @@ const router = createHashRouter(
       <Route
         path="generator"
         element={<Generator />}
-        loader={appLoader}
+        loader={generatorLoader}
         errorElement={<GeneratorError />}
       />
       <Route path="about" element={<About />} />
