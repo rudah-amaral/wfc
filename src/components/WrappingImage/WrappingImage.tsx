@@ -3,7 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import { returnOfGeneratorLoader } from "../../pages/Generator/Generator";
 import styles from "./WrappingImage.module.scss";
 
-const tilesPath = import.meta.glob<string>("../../circuit-tileset/*.png", {
+const tilesPath = import.meta.glob<string>("/src/circuit-tileset/*.png", {
   import: "default",
   eager: true,
 });
@@ -90,17 +90,16 @@ export default function WrappingImage({ gridTilesIds }: WrappingImageProps) {
     }
 
     async function loadTiles() {
-      const tilesetSize = Object.keys(tilesPath).length;
-      const tiles: Promise<HTMLImageElement>[] = new Array(tilesetSize)
-        .fill(null)
-        .map((_, tileId) => {
-          return new Promise((resolve, reject) => {
-            const tile = new Image();
-            tile.src = tilesPath[`../../circuit-tileset/${tileId}.png`];
-            tile.addEventListener("load", () => resolve(tile));
-            tile.addEventListener("error", (err) => reject(err));
-          });
+      const tiles: Promise<HTMLImageElement>[] = [];
+      for (const tilePath in tilesPath) {
+        const tileId = Number(tilePath.split("/").pop()!.split(".").shift());
+        tiles[tileId] = new Promise((resolve, reject) => {
+          const tile = new Image();
+          tile.src = tilePath;
+          tile.addEventListener("load", () => resolve(tile));
+          tile.addEventListener("error", (err) => reject(err));
         });
+      }
       return await Promise.all(tiles);
     }
   }, [columns, rows, gridTilesIds]);
