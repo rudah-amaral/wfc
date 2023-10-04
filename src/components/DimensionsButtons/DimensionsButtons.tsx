@@ -1,4 +1,4 @@
-import StatefulInput from "../StatefulInput";
+import StatefulInput from "@/components/StatefulInput";
 import styles from "./DimensionsButtons.module.scss";
 
 interface DimensionsButtonsProps {

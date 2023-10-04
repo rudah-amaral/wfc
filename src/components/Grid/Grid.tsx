@@ -1,8 +1,8 @@
-import Tile from "../Tile";
-import { tile } from "../../wfc-core";
+import Tile from "@/components/Tile";
+import { tile } from "@/wfc-core";
 import styles from "./Grid.module.scss";
 import { useLoaderData } from "react-router-dom";
-import { returnOfGeneratorLoader } from "../../pages/Generator/Generator";
+import { returnOfGeneratorLoader } from "@/pages/Generator/Generator";
 
 interface GridProps {
   grid: tile[][];

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import { returnOfGeneratorLoader } from "../../pages/Generator/Generator";
+import { returnOfGeneratorLoader } from "@/pages/Generator/Generator";
 import styles from "./WrappingImage.module.scss";
 
-const tilesPath = import.meta.glob<string>("/src/circuit-tileset/*.png", {
+const tilesPath = import.meta.glob<string>("@/circuit-tileset/*.png", {
   import: "default",
   eager: true,
 });

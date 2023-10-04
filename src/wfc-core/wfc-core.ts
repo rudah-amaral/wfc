@@ -1,4 +1,4 @@
-import tileset from "../circuit-tileset/tileset";
+import tileset from "@/circuit-tileset/tileset";
 
 export type tile = (typeof tileset)[number];
 interface cellData {

@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
-import GeneratorControls from "../../components/GeneratorControls";
-import Mosaic from "../../components/Mosaic";
-import { generateInitialHistory } from "../../wfc-core";
+import GeneratorControls from "@/components/GeneratorControls";
+import Mosaic from "@/components/Mosaic";
+import { generateInitialHistory } from "@/wfc-core";
 
 export type returnOfGeneratorLoader = Awaited<ReturnType<typeof loader>>;
 

@@ -1,12 +1,12 @@
 import { useEffect, useLayoutEffect } from "react";
 import styles from "./Mosaic.module.scss";
-import WrappingImage from "../WrappingImage";
-import Grid from "../Grid";
+import WrappingImage from "@/components/WrappingImage";
+import Grid from "@/components/Grid";
 import {
   collapseCellWithLeastEntropy,
   undoLastGuess,
   GridStep,
-} from "../../wfc-core";
+} from "@/wfc-core";
 
 interface MosaicProps {
   mosaicStatus: "idle" | "generating" | "done" | "no solution";

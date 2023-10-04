@@ -1,5 +1,5 @@
-import DimensionsButtons from "../DimensionsButtons";
-import GenerateButton from "../GenerateButton";
+import DimensionsButtons from "@/components/DimensionsButtons";
+import GenerateButton from "@/components/GenerateButton";
 import styles from "./GeneratorControls.module.scss";
 
 interface GeneratorControlsProps {
