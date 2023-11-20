@@ -1,9 +1,7 @@
-import styles from "./About.module.scss";
-
 export default function AboutWhatIsWFC() {
   return (
-    <div className={styles.paragraphs}>
-      <p className={styles.paragraph}>
+    <>
+      <p>
         Sit incidunt corrupti quidem praesentium excepturi Sit explicabo eos
         illo sunt nostrum. Facere esse aliquam odio corrupti numquam Ea neque
         quis harum deserunt harum. Ut soluta corporis fuga sed illo, laboriosam
@@ -11,7 +9,7 @@ export default function AboutWhatIsWFC() {
         dolore commodi tempore! Non ea quaerat laboriosam atque distinctio.
         Dolor?
       </p>
-      <p className={styles.paragraph}>
+      <p>
         Elit non vitae commodi ratione ab. Laudantium expedita quo maiores non
         expedita Quos blanditiis nam dolorem unde ipsam Mollitia id
         reprehenderit sit sed harum? Deleniti ipsam molestiae quod rerum nulla
@@ -23,11 +21,11 @@ export default function AboutWhatIsWFC() {
         neque Eum quisquam quas quo tempora delectus. Omnis esse earum facere
         ipsa aperiam Expedita vel id rem harum iure Dicta dolorem.
       </p>
-      <p className={styles.paragraph}>
+      <p>
         Dolor doloribus officia quidem id suscipit? Quibusdam voluptatibus nulla
         ipsa amet doloribus explicabo! Odit beatae ipsum perferendis voluptas
         enim, animi?
       </p>
-    </div>
+    </>
   );
 }
