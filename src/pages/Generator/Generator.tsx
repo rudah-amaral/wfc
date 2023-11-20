@@ -3,6 +3,7 @@ import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
 import GeneratorControls from "@/components/GeneratorControls";
 import Mosaic from "@/components/Mosaic";
 import { generateInitialHistory } from "@/wfc-core";
+import styles from "./Generator.module.scss";
 
 export type returnOfGeneratorLoader = Awaited<ReturnType<typeof loader>>;
 
@@ -25,7 +26,7 @@ export function Generator() {
   );
 
   return (
-    <>
+    <div className={styles.container}>
       <GeneratorControls
         disabled={mosaicStatus === "generating"}
         setMosaicStatus={setMosaicStatus}
@@ -38,7 +39,7 @@ export function Generator() {
         setHistory={setHistory}
         resetHistory={resetHistory}
       />
-    </>
+    </div>
   );
 }
 
