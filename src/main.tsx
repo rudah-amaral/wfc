@@ -11,7 +11,14 @@ import NavBar from "@/components/NavBar";
 
 import Home from "@/pages/Home";
 import { Generator, generatorLoader, GeneratorError } from "@/pages/Generator";
-import About from "@/pages/About";
+import {
+  About,
+  AboutIndex,
+  AboutAcknowledgments,
+  AboutWhatIsWFC,
+  AboutMe,
+  AboutTheTech,
+} from "@/pages/About";
 
 const router = createHashRouter(
   createRoutesFromElements(
@@ -23,7 +30,13 @@ const router = createHashRouter(
         loader={generatorLoader}
         errorElement={<GeneratorError />}
       />
-      <Route path="about" element={<About />} />
+      <Route path="about" element={<About />}>
+        <Route index element={<AboutIndex />} />
+        <Route path="acknowledgments" element={<AboutAcknowledgments />} />
+        <Route path="what-is-wfc" element={<AboutWhatIsWFC />} />
+        <Route path="the-tech" element={<AboutTheTech />} />
+        <Route path="me" element={<AboutMe />} />
+      </Route>
     </Route>
   )
 );
