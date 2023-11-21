@@ -2,30 +2,20 @@ export default function AboutMe() {
   return (
     <>
       <p>
-        Sit incidunt corrupti quidem praesentium excepturi Sit explicabo eos
-        illo sunt nostrum. Facere esse aliquam odio corrupti numquam Ea neque
-        quis harum deserunt harum. Ut soluta corporis fuga sed illo, laboriosam
-        Quidem illum nam officia nihil aliquid Reiciendis excepturi nesciunt
-        dolore commodi tempore! Non ea quaerat laboriosam atque distinctio.
-        Dolor?
+        I&apos;m Rudah Amaral, a Brazilian developer living in, at the time of
+        writing, Nova Friburgo, Rio de Janeiro.
       </p>
       <p>
-        Elit non vitae commodi ratione ab. Laudantium expedita quo maiores non
-        expedita Quos blanditiis nam dolorem unde ipsam Mollitia id
-        reprehenderit sit sed harum? Deleniti ipsam molestiae quod rerum nulla
-        aperiam temporibus Rerum impedit et iure corporis eaque Reiciendis quas
-        fuga libero dolorem commodi. Accusamus neque deserunt inventore incidunt
-        fuga unde Explicabo reiciendis dolorem tempore odio blanditiis odit.
-        Rerum deserunt quod labore velit perferendis porro in molestiae dolorem?
-        Voluptatum suscipit in sit quia saepe Sit ipsum libero iste nostrum
-        neque Eum quisquam quas quo tempora delectus. Omnis esse earum facere
-        ipsa aperiam Expedita vel id rem harum iure Dicta dolorem.
+        I&apos;m usually hacking, tinkering and ricing my computers, nerding out
+        with my friends about anything I&apos;m currently obsessed with, often
+        video-games, and despairing about how I have so little time to enjoy my
+        wide assortment of interests.
       </p>
       <p>
-        Dolor doloribus officia quidem id suscipit? Quibusdam voluptatibus nulla
-        ipsa amet doloribus explicabo! Odit beatae ipsum perferendis voluptas
-        enim, animi?
+        If you are reading this you should consider to follow, befriend or hire
+        me! Choose your pick.
       </p>
+      <p>See ya! o/</p>
     </>
   );
 }
