@@ -1,31 +1,96 @@
+import styles from "./About.module.scss";
+
 export default function AboutTheTech() {
   return (
     <>
       <p>
-        Sit incidunt corrupti quidem praesentium excepturi Sit explicabo eos
-        illo sunt nostrum. Facere esse aliquam odio corrupti numquam Ea neque
-        quis harum deserunt harum. Ut soluta corporis fuga sed illo, laboriosam
-        Quidem illum nam officia nihil aliquid Reiciendis excepturi nesciunt
-        dolore commodi tempore! Non ea quaerat laboriosam atque distinctio.
-        Dolor?
+        This website is a{" "}
+        <a href="https://react.dev/" className={styles.link}>
+          React
+        </a>{" "}
+        +{" "}
+        <a href="https://www.typescriptlang.org/" className={styles.link}>
+          TypeScript
+        </a>{" "}
+        project scaffolded with{" "}
+        <a href="https://vitejs.dev/" className={styles.link}>
+          Vite
+        </a>
+        .
       </p>
+
       <p>
-        Elit non vitae commodi ratione ab. Laudantium expedita quo maiores non
-        expedita Quos blanditiis nam dolorem unde ipsam Mollitia id
-        reprehenderit sit sed harum? Deleniti ipsam molestiae quod rerum nulla
-        aperiam temporibus Rerum impedit et iure corporis eaque Reiciendis quas
-        fuga libero dolorem commodi. Accusamus neque deserunt inventore incidunt
-        fuga unde Explicabo reiciendis dolorem tempore odio blanditiis odit.
-        Rerum deserunt quod labore velit perferendis porro in molestiae dolorem?
-        Voluptatum suscipit in sit quia saepe Sit ipsum libero iste nostrum
-        neque Eum quisquam quas quo tempora delectus. Omnis esse earum facere
-        ipsa aperiam Expedita vel id rem harum iure Dicta dolorem.
+        Styling was done with{" "}
+        <a href="https://sass-lang.com/" className={styles.link}>
+          SCSS
+        </a>
+        , using{" "}
+        <a
+          href="https://github.com/css-modules/css-modules"
+          className={styles.link}
+        >
+          CSS Modules
+        </a>{" "}
+        in order to scope styles locally (but in retrospect CSS-in-JS solutions
+        seems more appropriate now, there are too many state dependent styles).
       </p>
+
       <p>
-        Dolor doloribus officia quidem id suscipit? Quibusdam voluptatibus nulla
-        ipsa amet doloribus explicabo! Odit beatae ipsum perferendis voluptas
-        enim, animi?
+        Client side routing was done with{" "}
+        <a href="https://reactrouter.com/en/main" className={styles.link}>
+          React Router
+        </a>
+        . It&apos;s just a hash router using their Data API.
       </p>
+
+      <p>
+        Hosted on{" "}
+        <a href="https://pages.github.com/" className={styles.link}>
+          GitHub Pages
+        </a>{" "}
+        using{" "}
+        <a href="https://github.com/features/actions" className={styles.link}>
+          GitHub Actions
+        </a>{" "}
+        to deploy on{" "}
+        <a href="https://git-scm.com/docs/git-push" className={styles.link}>
+          git push
+        </a>{" "}
+        (whew, that was a lot &quot;gits&quot;, I wish I was being paid by the
+        links).
+      </p>
+
+      <p>
+        <a href="https://prettier.io/" className={styles.link}>
+          Prettier
+        </a>
+        ,{" "}
+        <a href="https://eslint.org/" className={styles.link}>
+          ESLint
+        </a>
+        ,{" "}
+        <a href="https://typicode.github.io/husky/" className={styles.link}>
+          Husky
+        </a>{" "}
+        and{" "}
+        <a
+          href="https://www.npmjs.com/package/lint-staged"
+          className={styles.link}
+        >
+          lint-staged
+        </a>{" "}
+        keep me from commiting non-typechecked, non-lintted, non-formatted code.
+        I try to run those tasks in parallel as much as possible with{" "}
+        <a
+          href="https://www.npmjs.com/package/concurrently"
+          className={styles.link}
+        >
+          concurrently
+        </a>
+        .
+      </p>
+
+      <p>And that&apos;s about it!</p>
     </>
   );
 }
