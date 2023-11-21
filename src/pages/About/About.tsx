@@ -43,13 +43,13 @@ export default function About() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="what-is-wfc" className={styles.navItem}>
-            <h3>What is Wave Function Collapse?</h3>
+          <NavLink to="the-tech" className={styles.navItem}>
+            <h3>Technologies Used</h3>
           </NavLink>
         </li>
         <li>
-          <NavLink to="the-tech" className={styles.navItem}>
-            <h3>Technologies Used</h3>
+          <NavLink to="what-is-missing" className={styles.navItem}>
+            <h3>What is missing?</h3>
           </NavLink>
         </li>
         <li>

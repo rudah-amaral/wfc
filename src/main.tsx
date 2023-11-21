@@ -15,7 +15,7 @@ import {
   About,
   AboutIndex,
   AboutAcknowledgments,
-  AboutWhatIsWFC,
+  AboutWhatIsMissing,
   AboutMe,
   AboutTheTech,
 } from "@/pages/About";
@@ -33,8 +33,8 @@ const router = createHashRouter(
       <Route path="about" element={<About />}>
         <Route index element={<AboutIndex />} />
         <Route path="acknowledgments" element={<AboutAcknowledgments />} />
-        <Route path="what-is-wfc" element={<AboutWhatIsWFC />} />
         <Route path="the-tech" element={<AboutTheTech />} />
+        <Route path="what-is-missing" element={<AboutWhatIsMissing />} />
         <Route path="me" element={<AboutMe />} />
       </Route>
     </Route>
