@@ -1,30 +1,25 @@
 export default function AboutIndex() {
   return (
     <>
+      <p>Hello and welcome to my website!</p>
       <p>
-        Sit incidunt corrupti quidem praesentium excepturi Sit explicabo eos
-        illo sunt nostrum. Facere esse aliquam odio corrupti numquam Ea neque
-        quis harum deserunt harum. Ut soluta corporis fuga sed illo, laboriosam
-        Quidem illum nam officia nihil aliquid Reiciendis excepturi nesciunt
-        dolore commodi tempore! Non ea quaerat laboriosam atque distinctio.
-        Dolor?
+        This is my first somewhat large scoped front-end project, involving a
+        image-generation algorithm well-suited with the tech stack I&apos;m
+        learning in order to get a job in the software development world.
       </p>
       <p>
-        Elit non vitae commodi ratione ab. Laudantium expedita quo maiores non
-        expedita Quos blanditiis nam dolorem unde ipsam Mollitia id
-        reprehenderit sit sed harum? Deleniti ipsam molestiae quod rerum nulla
-        aperiam temporibus Rerum impedit et iure corporis eaque Reiciendis quas
-        fuga libero dolorem commodi. Accusamus neque deserunt inventore incidunt
-        fuga unde Explicabo reiciendis dolorem tempore odio blanditiis odit.
-        Rerum deserunt quod labore velit perferendis porro in molestiae dolorem?
-        Voluptatum suscipit in sit quia saepe Sit ipsum libero iste nostrum
-        neque Eum quisquam quas quo tempora delectus. Omnis esse earum facere
-        ipsa aperiam Expedita vel id rem harum iure Dicta dolorem.
+        In other words it was my self-applied test to verify I was able to
+        handle these technologies, to gain some confidence in my skills. If I
+        could build something fairly complex by myself, then maybe a job in the
+        industry wouldn&apos;t seem so out of reach anymore. Who knows?
       </p>
       <p>
-        Dolor doloribus officia quidem id suscipit? Quibusdam voluptatibus nulla
-        ipsa amet doloribus explicabo! Odit beatae ipsum perferendis voluptas
-        enim, animi?
+        Even so, this project was not fruit from the efforts of a single person.
+        I have a lot of folk to be grateful for to be honest.
+      </p>
+      <p>
+        If any of this is of your interest, click in the corresponding link to
+        access more informations on said topic.
       </p>
     </>
   );
