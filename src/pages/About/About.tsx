@@ -29,33 +29,64 @@ export default function About() {
     );
   });
 
+  useEffect(() => {
+    if (!$linksList.current) return;
+    const list = $linksList.current;
+
+    function handleEvent(e: MouseEvent) {
+      if (!e.target) return;
+      const elem = e.target as HTMLElement;
+
+      if (elem.tagName !== "A") return;
+      window.scrollTo({ top: 0 });
+    }
+
+    list.addEventListener("click", handleEvent);
+
+    return () => {
+      if (!list) return;
+
+      list.removeEventListener("click", handleEvent);
+    };
+  });
+
   return (
     <div className={styles.container} ref={$container}>
       <ul className={styles.linksList} ref={$linksList}>
-        <li>
-          <NavLink to="" className={styles.navItem}>
-            <h3 className={styles.about}>About</h3>
-          </NavLink>
+        <li className={styles.listItem}>
+          <h3 className={styles.itemTitle}>
+            <NavLink to="" className={styles.listLink}>
+              About
+            </NavLink>
+          </h3>
         </li>
-        <li>
-          <NavLink to="acknowledgments" className={styles.navItem}>
-            <h3>Acknowledgments</h3>
-          </NavLink>
+        <li className={styles.listItem}>
+          <h3 className={styles.itemTitle}>
+            <NavLink to="acknowledgments" className={styles.listLink}>
+              Acknowledgments
+            </NavLink>
+          </h3>
         </li>
-        <li>
-          <NavLink to="the-tech" className={styles.navItem}>
-            <h3>Technologies Used</h3>
-          </NavLink>
+        <li className={styles.listItem}>
+          <h3 className={styles.itemTitle}>
+            <NavLink to="the-tech" className={styles.listLink}>
+              Technologies Used
+            </NavLink>
+          </h3>
         </li>
-        <li>
-          <NavLink to="what-is-missing" className={styles.navItem}>
-            <h3>What is missing?</h3>
-          </NavLink>
+        <li className={styles.listItem}>
+          <h3 className={styles.itemTitle}>
+            <NavLink to="what-is-missing" className={styles.listLink}>
+              What is missing?
+            </NavLink>
+          </h3>
         </li>
-        <li>
-          <NavLink to="me" className={styles.navItem}>
-            <h3>Me!</h3>
-          </NavLink>
+        <li className={styles.listItem}>
+          <h3 className={styles.itemTitle}>
+            <NavLink to="me" className={styles.listLink}>
+              Me!
+            </NavLink>
+          </h3>
         </li>
       </ul>
 
