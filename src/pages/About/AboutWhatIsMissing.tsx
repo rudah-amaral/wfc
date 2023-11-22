@@ -2,7 +2,7 @@ export default function AboutWhatIsMissing() {
   return (
     <>
       <p>
-        There are soooo more many features that I wanted to implement in this
+        There are soooo many more features that I wanted to implement in this
         side-project.
       </p>
       <p>
