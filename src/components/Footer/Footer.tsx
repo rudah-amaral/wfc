@@ -25,9 +25,9 @@ export default function Footer() {
             </a>
           </li>
           <li className={styles.listItem}>
-            <span className={styles.contactLocation}>Twitter</span>
-            <a href="https://twitter.com/rudah_dev" className={styles.link}>
-              @rudah_dev
+            <span className={styles.contactLocation}>Mastodon</span>
+            <a href="https://hachyderm.io/@rud___boy" className={styles.link}>
+              @rud___boy@hachyderm.io
             </a>
           </li>
           <li className={styles.listItem}>

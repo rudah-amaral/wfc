@@ -17,10 +17,10 @@
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, max-content));
+  grid-template-columns: repeat(auto-fit, minmax(150px, max-content));
   overflow: auto;
   justify-content: space-between;
-  row-gap: 1.5em;
+  gap: 2em;
 }
 
 .listItem {
