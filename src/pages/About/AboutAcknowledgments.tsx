@@ -96,7 +96,7 @@ export default function AboutAcknowledgments() {
         At the time of writing my implementation is missing some of the features
         from his, like the possibility to select a sub-set of modules from the
         tileset from which to generate the final image, manual collapsing a cell
-        to a specific tile instead of relying on the &apos;least entropyt&apos;
+        to a specific tile instead of relying on the &apos;least entropy&apos;
         heuristic, as well as a slider defining the delay between steps.
         I&apos;m not sure how, but it was this last feature that enlightened me
         on how to convert my recursive entropy propagation function into a
