@@ -6,10 +6,10 @@ export default function AboutWhatIsMissing() {
         side-project.
       </p>
       <p>
-        On the other hand, I&apos;m soooo done with this project already.
-        I&apos;m tired dude. I can&apos;t stand looking at this project&apos;s
-        codebase any longer. The love is GONE. To underestimate a project&apos;s
-        complexity scope is real. Fatally real.
+        On the other hand, I want to move on from this project in order to learn
+        new stuff and create new things. There&apos;s a time when you have to
+        consider your pet-project &quot;done&quot; and I think I reached that
+        point.
       </p>
       <p>
         So why not just list those ideas just for the fun of it? Someday when
