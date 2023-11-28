@@ -13,7 +13,7 @@ export default function AboutMe() {
       </p>
       <p>
         If you are reading this you should consider to follow, befriend or hire
-        me! Choose your pick.
+        me as a front-end web developer! Choose your pick.
       </p>
       <p>See ya! o/</p>
     </>
