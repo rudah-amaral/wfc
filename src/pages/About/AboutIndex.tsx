@@ -1,7 +1,16 @@
+import styles from "./About.module.scss";
+
 export default function AboutIndex() {
   return (
     <>
       <p>Hello and welcome to my website!</p>
+      <p>
+        You can acess the repository with its source code{" "}
+        <a href="https://github.com/rudah-amaral/wfc" className={styles.link}>
+          here
+        </a>
+        .
+      </p>
       <p>
         This is my first somewhat large scoped front-end project, involving a
         image-generation algorithm well-suited with the tech stack I&apos;m
