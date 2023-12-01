@@ -5,7 +5,7 @@ export default function AboutIndex() {
     <>
       <p>Hello and welcome to my website!</p>
       <p>
-        You can acess the repository with its source code{" "}
+        You can access the repository with its source code{" "}
         <a href="https://github.com/rudah-amaral/wfc" className={styles.link}>
           here
         </a>
