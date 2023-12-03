@@ -1,12 +1,57 @@
 import tileset from "@/circuit-tileset/tileset";
 import type { Tile } from "@/circuit-tileset/tileset";
 
+interface TileWithValidNeighbors extends Tile {
+  validNeighbors: Set<string>[];
+}
+const tilesetWithNeighbors = calculateValidNeighbors(tileset);
+function calculateValidNeighbors(tileset: Tile[]) {
+  const tilesetWithSets = tileset.map<TileWithValidNeighbors>((tile) => {
+    return {
+      ...tile,
+      validNeighbors: [
+        new Set<string>(),
+        new Set<string>(),
+        new Set<string>(),
+        new Set<string>(),
+      ],
+    };
+  });
+
+  for (let aTile = 0; aTile < tilesetWithSets.length; aTile++) {
+    for (let bTile = aTile; bTile < tilesetWithSets.length; bTile++) {
+      for (let way = 0; way < 4; way++) {
+        const oppositeWay = (way + 2) % 4;
+
+        const baseTile = tilesetWithSets[aTile];
+        const tileEdge = baseTile.edges[way];
+
+        const comparatorTile = tilesetWithSets[bTile];
+        const comparatorEdge = reverseString(comparatorTile.edges[oppositeWay]);
+
+        if (tileEdge === comparatorEdge) {
+          baseTile.validNeighbors[way].add(comparatorTile.path);
+          comparatorTile.validNeighbors[oppositeWay].add(baseTile.path);
+        }
+      }
+    }
+  }
+
+  return tilesetWithSets;
+}
+
+function reverseString(string: string) {
+  const stringArray = string.split("");
+  stringArray.reverse();
+  return stringArray.join("");
+}
+
 interface CollapsedCell {
   index: number;
   tile: Tile;
 }
 export interface GridStep {
-  grid: Tile[][];
+  grid: TileWithValidNeighbors[][];
   collapsedCell: null | CollapsedCell;
 }
 let columns: number, rows: number;
@@ -15,15 +60,15 @@ export function generateInitialHistory(gridColumns: number, gridRows: number) {
   rows = gridRows;
   const gridOptions = Array(gridColumns * gridRows)
     .fill(null)
-    .map(() => [...tileset]);
+    .map(() => [...tilesetWithNeighbors]);
 
   gridOptions.forEach((_, cellIndex) => {
     getNeighborsIndexes(cellIndex).forEach((neighborIndex, neighborWay) => {
       if (cellIndex !== neighborIndex) return;
 
-      const validTiles: Tile[] = [];
+      const validTiles: TileWithValidNeighbors[] = [];
       gridOptions[cellIndex].forEach((tile) => {
-        if (getCongruentTiles([tile], [tile], neighborWay).length > 0) {
+        if (tile.validNeighbors[neighborWay].has(tile.path)) {
           validTiles.push(tile);
         }
       });
@@ -42,7 +87,7 @@ export function generateInitialHistory(gridColumns: number, gridRows: number) {
 
 interface CellData {
   index: number;
-  options: Tile[];
+  options: TileWithValidNeighbors[];
 }
 export function collapseCellWithLeastEntropy(history: GridStep[]) {
   const grid = history[history.length - 1].grid;
@@ -89,7 +134,10 @@ interface PropagationStep {
   path: number;
   neighbors: (number | null)[];
 }
-function propagateEntropy(grid: Tile[][], selectedCellIndex: number) {
+function propagateEntropy(
+  grid: TileWithValidNeighbors[][],
+  selectedCellIndex: number
+) {
   const propagationStack: PropagationStep[] = [];
   pushToPropagationStack(selectedCellIndex, propagationStack, grid);
 
@@ -107,12 +155,15 @@ function propagateEntropy(grid: Tile[][], selectedCellIndex: number) {
       continue;
     }
 
+    const pathOptions = grid[stackTop.path];
     const neighborOptions = grid[neighborIndex];
-    const newNeighborOptions = getCongruentTiles(
-      neighborOptions,
-      grid[stackTop.path],
-      neighborWay
-    );
+
+    const newNeighborOptions = neighborOptions.filter((neighborOption) => {
+      for (const pathOption of pathOptions) {
+        if (pathOption.validNeighbors[neighborWay].has(neighborOption.path))
+          return true;
+      }
+    });
 
     const entropyReduced = newNeighborOptions.length < neighborOptions.length;
     if (entropyReduced) {
@@ -155,30 +206,6 @@ function getNeighborsIndexes(cellIndex: number) {
   const topIndex = (cellIndex - columns + tilesAmount) % tilesAmount;
 
   return [topIndex, rightIndex, bottomIndex, leftIndex];
-}
-
-function getCongruentTiles(tiles: Tile[], pattern: Tile[], tilesWay: number) {
-  const patternWay = (tilesWay + 2) % 4;
-  const tilesWithSameEdge: Tile[] = [];
-
-  tiles.forEach((tile) => {
-    const tileEdge = reverseString(tile.edges[patternWay]);
-
-    for (const comparator of pattern) {
-      const comparatorEdge = comparator.edges[tilesWay];
-      if (tileEdge === comparatorEdge) {
-        tilesWithSameEdge.push(tile);
-        break;
-      }
-    }
-  });
-  return tilesWithSameEdge;
-}
-
-function reverseString(string: string) {
-  const stringArray = string.split("");
-  stringArray.reverse();
-  return stringArray.join("");
 }
 
 export function undoLastGuess(history: GridStep[]) {
