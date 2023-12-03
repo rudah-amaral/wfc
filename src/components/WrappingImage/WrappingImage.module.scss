@@ -8,30 +8,9 @@
 .scrollingImage {
   position: absolute;
   image-rendering: pixelated;
-  animation-name: wrapX, wrapY;
-  animation-iteration-count: infinite, infinite;
-  animation-timing-function: linear, linear;
-  animation-delay: 200ms, 200ms;
   width: calc(var(--mosaic-width) * 2);
   height: calc(var(--mosaic-height) * 2);
-}
-
-@keyframes wrapX {
-  from {
-    left: 0;
-  }
-
-  to {
-    left: -100%;
-  }
-}
-
-@keyframes wrapY {
-  from {
-    top: 0;
-  }
-
-  to {
-    top: -100%;
-  }
+  background-size: var(--mosaic-width) var(--mosaic-height);
+  cursor: move;
+  touch-action: none;
 }
