@@ -1,6 +1,6 @@
 import tileset from "@/circuit-tileset/tileset";
+import type { tile } from "@/circuit-tileset/tileset";
 
-export type tile = (typeof tileset)[number];
 interface cellData {
   index: number;
   options: tile[];

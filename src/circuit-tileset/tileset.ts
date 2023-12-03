@@ -1,4 +1,4 @@
-interface tile {
+export interface tile {
   id: number;
   edges: string[];
 }
