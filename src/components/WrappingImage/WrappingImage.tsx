@@ -3,16 +3,11 @@ import { useLoaderData } from "react-router-dom";
 import { returnOfGeneratorLoader } from "@/pages/Generator/Generator";
 import styles from "./WrappingImage.module.scss";
 
-const tilesPath = import.meta.glob<string>("../../circuit-tileset/*.png", {
-  import: "default",
-  eager: true,
-});
-
 interface WrappingImageProps {
-  gridTilesIds: number[];
+  gridTilesPaths: string[];
 }
 
-export default function WrappingImage({ gridTilesIds }: WrappingImageProps) {
+export default function WrappingImage({ gridTilesPaths }: WrappingImageProps) {
   const [imgURL, setImageURL] = useState<string>();
   const imgRef = useRef<HTMLImageElement>(null);
   const { rows, columns } = useLoaderData() as returnOfGeneratorLoader;
@@ -57,8 +52,8 @@ export default function WrappingImage({ gridTilesIds }: WrappingImageProps) {
     }
 
     async function createPattern() {
-      const tiles = await loadTiles();
-      patternTileSize = tiles[0].width;
+      const tileImg = await loadTileImg(gridTilesPaths[0]);
+      patternTileSize = tileImg.width;
 
       const canvas = document.createElement("canvas");
       canvas.width = patternTileSize * columns;
@@ -71,10 +66,10 @@ export default function WrappingImage({ gridTilesIds }: WrappingImageProps) {
       for (let row = 0; row < rows; row++) {
         let offsetX = 0;
         for (let column = 0; column < columns; column++) {
-          const tileId = gridTilesIds[column + row * columns];
-          if (!tiles[tileId]) return;
+          const tilePath = gridTilesPaths[column + row * columns];
+          const tileImg = await loadTileImg(tilePath);
           ctx.drawImage(
-            tiles[tileId],
+            tileImg,
             offsetX,
             offsetY,
             patternTileSize,
@@ -89,21 +84,15 @@ export default function WrappingImage({ gridTilesIds }: WrappingImageProps) {
       if (pattern) return pattern;
     }
 
-    async function loadTiles() {
-      const tilesetSize = Object.keys(tilesPath).length;
-      const tiles: Promise<HTMLImageElement>[] = new Array(tilesetSize)
-        .fill(null)
-        .map((_, tileId) => {
-          return new Promise((resolve, reject) => {
-            const tile = new Image();
-            tile.src = tilesPath[`../../circuit-tileset/${tileId}.png`];
-            tile.addEventListener("load", () => resolve(tile));
-            tile.addEventListener("error", (err) => reject(err));
-          });
-        });
-      return await Promise.all(tiles);
+    function loadTileImg(tilePath: string) {
+      return new Promise<HTMLImageElement>((resolve, reject) => {
+        const tile = new Image();
+        tile.src = tilePath;
+        tile.addEventListener("load", () => resolve(tile));
+        tile.addEventListener("error", (err) => reject(err));
+      });
     }
-  }, [columns, rows, gridTilesIds]);
+  }, [columns, rows, gridTilesPaths]);
 
   return (
     <div className={styles.scrollingImageWrapper}>

@@ -22,7 +22,7 @@ export default function Grid({ grid }: GridProps) {
     return (
       <span style={cellStyle} className={styles.cell} key={index}>
         {tileOptions.length === 1 ? (
-          <Tile id={tileOptions[0].id} />
+          <Tile path={tileOptions[0].path} />
         ) : (
           tileOptions.length
         )}

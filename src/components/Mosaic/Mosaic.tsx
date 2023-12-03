@@ -67,7 +67,7 @@ export default function Mosaic({
   return (
     <div className={styles.mosaicContainer}>
       {mosaicStatus === "done" && (
-        <WrappingImage gridTilesIds={grid.map((cell) => cell[0].id)} />
+        <WrappingImage gridTilesPaths={grid.map((cell) => cell[0].path)} />
       )}
       <Grid grid={grid} />
     </div>
