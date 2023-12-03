@@ -1,22 +1,22 @@
 import tileset from "@/circuit-tileset/tileset";
-import type { tile } from "@/circuit-tileset/tileset";
+import type { Tile } from "@/circuit-tileset/tileset";
 
-interface cellData {
+interface CellData {
   index: number;
-  options: tile[];
+  options: Tile[];
 }
 
 interface CollapsedCell {
   index: number;
-  tile: tile;
+  tile: Tile;
 }
 
 export interface GridStep {
-  grid: tile[][];
+  grid: Tile[][];
   collapsedCell: null | CollapsedCell;
 }
 
-interface propagationStep {
+interface PropagationStep {
   path: number;
   neighbors: (number | null)[];
 }
@@ -33,7 +33,7 @@ export function generateInitialHistory(gridColumns: number, gridRows: number) {
     getNeighborsIndexes(cellIndex).forEach((neighborIndex, neighborWay) => {
       if (cellIndex !== neighborIndex) return;
 
-      const validTiles: tile[] = [];
+      const validTiles: Tile[] = [];
       gridOptions[cellIndex].forEach((tile) => {
         if (getCongruentTiles([tile], [tile], neighborWay).length > 0) {
           validTiles.push(tile);
@@ -91,7 +91,7 @@ export function collapseCellWithLeastEntropy(history: GridStep[]) {
     }
   });
 
-  const cellsLeastOptions: cellData[] = [];
+  const cellsLeastOptions: CellData[] = [];
   grid.forEach((tileOptions, index) => {
     if (tileOptions.length === leastOptions) {
       cellsLeastOptions.push({ index, options: tileOptions });
@@ -122,8 +122,8 @@ export function collapseCellWithLeastEntropy(history: GridStep[]) {
   return nextHistory;
 }
 
-function propagateEntropy(grid: tile[][], selectedCellIndex: number) {
-  const propagationStack: propagationStep[] = [];
+function propagateEntropy(grid: Tile[][], selectedCellIndex: number) {
+  const propagationStack: PropagationStep[] = [];
   pushToPropagationStack(selectedCellIndex, propagationStack, grid);
 
   while (propagationStack.length > 0) {
@@ -159,8 +159,8 @@ function propagateEntropy(grid: tile[][], selectedCellIndex: number) {
 
 function pushToPropagationStack(
   cellIndex: number,
-  propagationStack: propagationStep[],
-  grid: tile[][]
+  propagationStack: PropagationStep[],
+  grid: Tile[][]
 ) {
   if (grid[cellIndex].length === 0) return;
 
@@ -190,9 +190,9 @@ function getNeighborsIndexes(cellIndex: number) {
   return [topIndex, rightIndex, bottomIndex, leftIndex];
 }
 
-function getCongruentTiles(tiles: tile[], pattern: tile[], tilesWay: number) {
+function getCongruentTiles(tiles: Tile[], pattern: Tile[], tilesWay: number) {
   const patternWay = (tilesWay + 2) % 4;
-  const tilesWithSameEdge: tile[] = [];
+  const tilesWithSameEdge: Tile[] = [];
 
   tiles.forEach((tile) => {
     const tileEdge = reverseString(tile.edges[patternWay]);

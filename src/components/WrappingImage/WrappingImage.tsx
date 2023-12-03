@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import { returnOfGeneratorLoader } from "@/pages/Generator/Generator";
 import styles from "./WrappingImage.module.scss";
+import type { ReturnOfGeneratorLoader } from "@/pages/Generator";
 
 interface WrappingImageProps {
   gridTilesPaths: string[];
@@ -10,7 +10,7 @@ interface WrappingImageProps {
 export default function WrappingImage({ gridTilesPaths }: WrappingImageProps) {
   const [imgURL, setImageURL] = useState<string>();
   const imgRef = useRef<HTMLImageElement>(null);
-  const { rows, columns } = useLoaderData() as returnOfGeneratorLoader;
+  const { rows, columns } = useLoaderData() as ReturnOfGeneratorLoader;
 
   useEffect(() => {
     let patternTileSize: number;

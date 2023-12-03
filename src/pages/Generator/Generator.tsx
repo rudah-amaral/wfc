@@ -5,10 +5,10 @@ import Mosaic from "@/components/Mosaic";
 import { generateInitialHistory } from "@/wfc-core";
 import styles from "./Generator.module.scss";
 
-export type returnOfGeneratorLoader = Awaited<ReturnType<typeof loader>>;
+export type ReturnOfGeneratorLoader = Awaited<ReturnType<typeof loader>>;
 
 export function Generator() {
-  const { rows, columns } = useLoaderData() as returnOfGeneratorLoader;
+  const { rows, columns } = useLoaderData() as ReturnOfGeneratorLoader;
   document.documentElement.style.setProperty("--rows", rows.toString());
   document.documentElement.style.setProperty("--columns", columns.toString());
   type MosaicStatus = "idle" | "generating" | "done" | "no solution";

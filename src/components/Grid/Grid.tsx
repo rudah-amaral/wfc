@@ -1,15 +1,15 @@
 import Tile from "@/components/Tile";
-import type { tile } from "@/circuit-tileset/tileset";
 import styles from "./Grid.module.scss";
 import { useLoaderData } from "react-router-dom";
-import { returnOfGeneratorLoader } from "@/pages/Generator/Generator";
+import type { Tile as TileData } from "@/circuit-tileset/tileset";
+import type { ReturnOfGeneratorLoader } from "@/pages/Generator";
 
 interface GridProps {
-  grid: tile[][];
+  grid: TileData[][];
 }
 
 export default function Grid({ grid }: GridProps) {
-  const { columns } = useLoaderData() as returnOfGeneratorLoader;
+  const { columns } = useLoaderData() as ReturnOfGeneratorLoader;
   const cells = grid.map((tileOptions, index) => {
     const rowStart = Math.floor(index / columns) + 1;
     const rowEnd = rowStart + 1;

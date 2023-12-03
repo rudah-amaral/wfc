@@ -3,12 +3,12 @@ const tilesMod = import.meta.glob<string>("./*.png", {
   eager: true,
 });
 
-export interface tile {
+export interface Tile {
   path: string;
   edges: string[];
 }
 
-const tileset: tile[] = [
+const tileset: Tile[] = [
   // Tile 0
   {
     path: tilesMod["./0.png"],
