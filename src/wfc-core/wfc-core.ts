@@ -40,35 +40,6 @@ export function generateInitialHistory(gridColumns: number, gridRows: number) {
   return initialHistory;
 }
 
-export function undoLastGuess(history: GridStep[]) {
-  const nextHistory = [...history];
-  const lastStep = nextHistory.length - 1;
-  const failedGuess = nextHistory[lastStep].collapsedCell;
-  // Base case representing having a cell with zero entropy in the first
-  // step of the history, which only happens when the tileset has no
-  // solution whatsoever with this combination of rows and columns
-  if (failedGuess === null) return;
-
-  nextHistory.splice(lastStep);
-
-  // To fix the previous step, remove the failed guess from the pool of
-  // possible tiles
-  const previousStep = nextHistory.length - 1;
-  const previousGrid = nextHistory[previousStep].grid;
-  const fixedCell = previousGrid[failedGuess.index].filter((tileOption) => {
-    return tileOption !== failedGuess.tile;
-  });
-  previousGrid[failedGuess.index] = fixedCell;
-
-  // And then recalculate the entropy propagated from that cell
-  nextHistory[previousStep].grid = propagateEntropy(
-    previousGrid,
-    failedGuess.index
-  );
-
-  return nextHistory;
-}
-
 interface CellData {
   index: number;
   options: Tile[];
@@ -208,4 +179,33 @@ function reverseString(string: string) {
   const stringArray = string.split("");
   stringArray.reverse();
   return stringArray.join("");
+}
+
+export function undoLastGuess(history: GridStep[]) {
+  const nextHistory = [...history];
+  const lastStep = nextHistory.length - 1;
+  const failedGuess = nextHistory[lastStep].collapsedCell;
+  // Base case representing having a cell with zero entropy in the first
+  // step of the history, which only happens when the tileset has no
+  // solution whatsoever with this combination of rows and columns
+  if (failedGuess === null) return;
+
+  nextHistory.splice(lastStep);
+
+  // To fix the previous step, remove the failed guess from the pool of
+  // possible tiles
+  const previousStep = nextHistory.length - 1;
+  const previousGrid = nextHistory[previousStep].grid;
+  const fixedCell = previousGrid[failedGuess.index].filter((tileOption) => {
+    return tileOption !== failedGuess.tile;
+  });
+  previousGrid[failedGuess.index] = fixedCell;
+
+  // And then recalculate the entropy propagated from that cell
+  nextHistory[previousStep].grid = propagateEntropy(
+    previousGrid,
+    failedGuess.index
+  );
+
+  return nextHistory;
 }
