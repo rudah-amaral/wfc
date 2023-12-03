@@ -1,26 +1,14 @@
 import tileset from "@/circuit-tileset/tileset";
 import type { Tile } from "@/circuit-tileset/tileset";
 
-interface CellData {
-  index: number;
-  options: Tile[];
-}
-
 interface CollapsedCell {
   index: number;
   tile: Tile;
 }
-
 export interface GridStep {
   grid: Tile[][];
   collapsedCell: null | CollapsedCell;
 }
-
-interface PropagationStep {
-  path: number;
-  neighbors: (number | null)[];
-}
-
 let columns: number, rows: number;
 export function generateInitialHistory(gridColumns: number, gridRows: number) {
   columns = gridColumns;
@@ -81,6 +69,10 @@ export function undoLastGuess(history: GridStep[]) {
   return nextHistory;
 }
 
+interface CellData {
+  index: number;
+  options: Tile[];
+}
 export function collapseCellWithLeastEntropy(history: GridStep[]) {
   const grid = history[history.length - 1].grid;
 
@@ -122,6 +114,10 @@ export function collapseCellWithLeastEntropy(history: GridStep[]) {
   return nextHistory;
 }
 
+interface PropagationStep {
+  path: number;
+  neighbors: (number | null)[];
+}
 function propagateEntropy(grid: Tile[][], selectedCellIndex: number) {
   const propagationStack: PropagationStep[] = [];
   pushToPropagationStack(selectedCellIndex, propagationStack, grid);
