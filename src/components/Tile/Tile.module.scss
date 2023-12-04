@@ -2,6 +2,7 @@
   display: block;
   width: var(--tile-size);
   height: var(--tile-size);
+  background-size: var(--tile-size);
   image-rendering: pixelated;
   animation-name: pop;
   animation-duration: var(--tile-animation-delay);

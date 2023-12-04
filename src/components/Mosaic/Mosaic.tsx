@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
 import styles from "./Mosaic.module.scss";
-import WrappingImage from "@/components/WrappingImage";
 import Grid from "@/components/Grid";
 import {
   collapseCellWithLeastEntropy,
@@ -66,10 +65,7 @@ export default function Mosaic({
 
   return (
     <div className={styles.mosaicContainer}>
-      {mosaicStatus === "done" && (
-        <WrappingImage gridTilesPaths={grid.map((cell) => cell[0].path)} />
-      )}
-      <Grid grid={grid} />
+      <Grid grid={grid} mosaicStatus={mosaicStatus} />
     </div>
   );
 }

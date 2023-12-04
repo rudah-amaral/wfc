@@ -1,5 +1,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@700&display=swap");
 
+.scrollingImageWrapper {
+  position: absolute;
+  overflow: hidden;
+  width: var(--mosaic-width);
+  height: var(--mosaic-height);
+}
+
+.scrollingImage {
+  width: calc(var(--mosaic-width) * 2);
+  height: calc(var(--mosaic-height) * 2);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  cursor: move;
+  touch-action: none;
+}
+
 .grid {
   display: grid;
   align-items: center;

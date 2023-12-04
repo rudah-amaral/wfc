@@ -5,5 +5,10 @@ interface TileProps {
 }
 
 export default function Tile({ path }: TileProps) {
-  return <img src={path} className={styles.tile} />;
+  return (
+    <div
+      style={{ backgroundImage: `url(${path})` }}
+      className={styles.tile}
+    ></div>
+  );
 }
