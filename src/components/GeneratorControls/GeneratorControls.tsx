@@ -1,27 +1,28 @@
 import DimensionsButtons from "@/components/DimensionsButtons";
 import GenerateButton from "@/components/GenerateButton";
+import { GridStep } from "@/wfc-core";
 import styles from "./GeneratorControls.module.scss";
 
 interface GeneratorControlsProps {
-  disabled: boolean;
+  mosaicStatus: "idle" | "generating" | "done" | "no solution";
   setMosaicStatus: React.Dispatch<
     React.SetStateAction<"idle" | "generating" | "done" | "no solution">
   >;
-  resetHistory(): void;
+  setHistory: React.Dispatch<React.SetStateAction<GridStep[]>>;
 }
 
 export default function GeneratorControls({
-  disabled,
+  mosaicStatus,
   setMosaicStatus,
-  resetHistory,
+  setHistory,
 }: GeneratorControlsProps) {
   return (
     <div className={styles.controlsWrapper}>
-      <DimensionsButtons disabled={disabled} />
+      <DimensionsButtons disabled={mosaicStatus === "generating"} />
       <GenerateButton
-        disabled={disabled}
+        mosaicStatus={mosaicStatus}
         setMosaicStatus={setMosaicStatus}
-        resetHistory={resetHistory}
+        setHistory={setHistory}
       />
     </div>
   );

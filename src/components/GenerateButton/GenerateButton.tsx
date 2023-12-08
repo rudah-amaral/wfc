@@ -1,21 +1,25 @@
+import type { GridStep } from "@/wfc-core";
 import styles from "./GenerateButton.module.scss";
 
 interface GenerateButtonProps {
-  disabled: boolean;
+  mosaicStatus: "idle" | "generating" | "done" | "no solution";
   setMosaicStatus: React.Dispatch<
     React.SetStateAction<"idle" | "generating" | "done" | "no solution">
   >;
-  resetHistory(): void;
+  setHistory: React.Dispatch<React.SetStateAction<GridStep[]>>;
 }
 export default function GenerateButton({
-  disabled,
+  mosaicStatus,
   setMosaicStatus,
-  resetHistory,
+  setHistory,
 }: GenerateButtonProps) {
+  const disabled = mosaicStatus === "generating";
+
   function generateMosaic() {
     if (disabled) return;
+
     setMosaicStatus("generating");
-    resetHistory();
+    if (mosaicStatus === "done") setHistory((prev) => [prev[0]]);
   }
 
   return (

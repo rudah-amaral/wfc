@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect } from "react";
 import styles from "./Mosaic.module.scss";
 import Grid from "@/components/Grid";
 import {
@@ -14,7 +14,6 @@ interface MosaicProps {
   >;
   history: GridStep[];
   setHistory: React.Dispatch<React.SetStateAction<GridStep[]>>;
-  resetHistory: () => void;
 }
 
 export default function Mosaic({
@@ -22,7 +21,6 @@ export default function Mosaic({
   setMosaicStatus,
   history,
   setHistory,
-  resetHistory,
 }: MosaicProps) {
   const grid = history[history.length - 1].grid;
   const tileAnimationDelay = 300;
@@ -30,11 +28,6 @@ export default function Mosaic({
     "--tile-animation-delay",
     `${tileAnimationDelay}ms`
   );
-
-  useLayoutEffect(() => {
-    setMosaicStatus("idle");
-    resetHistory();
-  }, [setMosaicStatus, resetHistory]);
 
   useEffect(() => {
     if (mosaicStatus !== "generating") return;

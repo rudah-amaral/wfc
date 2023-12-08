@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
 import GeneratorControls from "@/components/GeneratorControls";
 import Mosaic from "@/components/Mosaic";
@@ -8,36 +8,32 @@ import styles from "./Generator.module.scss";
 export type ReturnOfGeneratorLoader = Awaited<ReturnType<typeof loader>>;
 
 export function Generator() {
-  const { rows, columns } = useLoaderData() as ReturnOfGeneratorLoader;
+  const { rows, columns, initialHistory } =
+    useLoaderData() as ReturnOfGeneratorLoader;
   document.documentElement.style.setProperty("--rows", rows.toString());
   document.documentElement.style.setProperty("--columns", columns.toString());
   type MosaicStatus = "idle" | "generating" | "done" | "no solution";
   const [mosaicStatus, setMosaicStatus] = useState<MosaicStatus>("idle");
 
-  const initialHistory = useMemo(
-    () => generateInitialHistory(columns, rows),
-    [columns, rows]
-  );
   const [history, setHistory] = useState(initialHistory);
 
-  const resetHistory = useCallback(
-    () => setHistory(initialHistory),
-    [initialHistory]
-  );
+  useLayoutEffect(() => {
+    setMosaicStatus("idle");
+    setHistory(initialHistory);
+  }, [initialHistory]);
 
   return (
     <div className={styles.container}>
       <GeneratorControls
-        disabled={mosaicStatus === "generating"}
+        mosaicStatus={mosaicStatus}
         setMosaicStatus={setMosaicStatus}
-        resetHistory={resetHistory}
+        setHistory={setHistory}
       />
       <Mosaic
         mosaicStatus={mosaicStatus}
         setMosaicStatus={setMosaicStatus}
         history={history}
         setHistory={setHistory}
-        resetHistory={resetHistory}
       />
     </div>
   );
@@ -62,5 +58,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw new Error("rows and columns should be integers between 1 and 30");
   }
 
-  return { columns, rows };
+  const initialHistory = generateInitialHistory(columns, rows);
+
+  return { columns, rows, initialHistory };
 }
