@@ -103,9 +103,13 @@ export default function Grid({ grid, mosaicStatus }: GridProps) {
     <div className={styles.scrollingImageWrapper}>
       <div className={styles.scrollingImage} ref={mosaicDivRef}>
         <div className={styles.grid}>{cells}</div>
-        <div className={styles.grid}>{cells}</div>
-        <div className={styles.grid}>{cells}</div>
-        <div className={styles.grid}>{cells}</div>
+        {mosaicStatus === "done" && (
+          <>
+            <div className={styles.grid}>{cells}</div>
+            <div className={styles.grid}>{cells}</div>
+            <div className={styles.grid}>{cells}</div>
+          </>
+        )}
       </div>
     </div>
   );
