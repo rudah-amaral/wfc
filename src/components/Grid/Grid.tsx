@@ -47,6 +47,7 @@ export default function Grid({ grid, mosaicStatus }: GridProps) {
     if (mosaicStatus !== "done") return;
 
     mosaicDiv.addEventListener("pointerdown", startDrag);
+    mosaicDiv.classList.add(styles.done);
 
     let initialScreenX: number;
     let initialScreenY: number;
@@ -54,7 +55,6 @@ export default function Grid({ grid, mosaicStatus }: GridProps) {
       e.preventDefault();
       initialScreenX = e.screenX;
       initialScreenY = e.screenY;
-      document.documentElement.style.userSelect = "none";
       document.documentElement.style.cursor = "move";
       document.addEventListener("pointermove", drag);
       document.addEventListener("pointerup", stopDrag);
@@ -62,7 +62,6 @@ export default function Grid({ grid, mosaicStatus }: GridProps) {
 
     function stopDrag(e: PointerEvent) {
       e.preventDefault();
-      document.documentElement.style.userSelect = "";
       document.documentElement.style.cursor = "auto";
       document.removeEventListener("pointermove", drag);
       document.removeEventListener("pointerup", stopDrag);
@@ -96,6 +95,7 @@ export default function Grid({ grid, mosaicStatus }: GridProps) {
 
     return () => {
       mosaicDiv.removeEventListener("pointerdown", startDrag);
+      mosaicDiv.classList.remove(styles.done);
     };
   }, [mosaicStatus]);
 
