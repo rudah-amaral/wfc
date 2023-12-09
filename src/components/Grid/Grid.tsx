@@ -1,7 +1,7 @@
 import Tile from "@/components/Tile";
 import styles from "./Grid.module.scss";
 import { useLoaderData } from "react-router-dom";
-import type { Tile as TileData } from "@/circuit-tileset/tileset";
+import type { Tile as TileData } from "@/wfc-core";
 import type { ReturnOfGeneratorLoader } from "@/pages/Generator";
 import { useEffect, useRef } from "react";
 

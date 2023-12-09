@@ -1,14 +1,75 @@
-import tileset from "@/circuit-tileset/tileset";
-import type { Tile } from "@/circuit-tileset/tileset";
+import baseTileset from "@/circuit-tileset/tileset";
+import type { BaseTile } from "@/circuit-tileset/tileset";
 
-interface TileWithValidNeighbors extends Tile {
+type ExpandedTile = Omit<BaseTile, "timesCanBeRotated">;
+export interface Tile extends Omit<ExpandedTile, "edges"> {
   validNeighbors: Set<string>[];
 }
-const tilesetWithNeighbors = calculateValidNeighbors(tileset);
-function calculateValidNeighbors(tileset: Tile[]) {
-  const tilesetWithSets = tileset.map<TileWithValidNeighbors>((tile) => {
+let tileset: Tile[];
+export async function getTileset() {
+  const expandedTileset = await expandTileset(baseTileset);
+  tileset = calculateValidNeighbors(expandedTileset);
+  return tileset;
+}
+
+async function expandTileset(tileset: BaseTile[]) {
+  const rotationableTiles = tileset.filter((tile) => tile.timesCanBeRotated);
+  const tileImg = await loadTileImg(tileset[0].path);
+
+  const canvas = document.createElement("canvas");
+  const tileWidth = tileImg.width;
+  const tileHeight = tileImg.height;
+
+  canvas.width = tileWidth;
+  canvas.height = tileHeight;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw "canvas not generated";
+
+  const expandedTileset = tileset.map<ExpandedTile>((tile) => {
     return {
-      ...tile,
+      path: tile.path,
+      edges: tile.edges,
+    };
+  });
+  for (const rotationableTile of rotationableTiles) {
+    const rotationableTileImg = await loadTileImg(rotationableTile.path);
+    const timesCanBeRotated = rotationableTile.timesCanBeRotated!;
+
+    let rotatedTileEdges = rotationableTile.edges;
+    for (const timesRotated of timesCanBeRotated) {
+      ctx.translate(tileWidth / 2, tileHeight / 2);
+      ctx.rotate((timesRotated * Math.PI) / 2);
+      ctx.translate(-tileWidth / 2, -tileHeight / 2);
+      ctx.drawImage(rotationableTileImg, 0, 0, tileWidth, tileHeight);
+      const rotatedTilePath = canvas.toDataURL();
+      rotatedTileEdges = [...rotatedTileEdges];
+      rotatedTileEdges.unshift(rotatedTileEdges.pop()!);
+
+      expandedTileset.push({
+        path: rotatedTilePath,
+        edges: rotatedTileEdges,
+      });
+
+      ctx.resetTransform();
+    }
+  }
+  return expandedTileset;
+}
+
+async function loadTileImg(tilePath: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image();
+    img.addEventListener("load", () => resolve(img));
+    img.addEventListener("error", (err) => reject(err));
+    img.src = tilePath;
+  });
+}
+
+function calculateValidNeighbors(expandedTileset: ExpandedTile[]) {
+  const tilesetWithSets = expandedTileset.map<Tile>((tile) => {
+    return {
+      path: tile.path,
       validNeighbors: [
         new Set<string>(),
         new Set<string>(),
@@ -18,20 +79,20 @@ function calculateValidNeighbors(tileset: Tile[]) {
     };
   });
 
-  for (let aTile = 0; aTile < tilesetWithSets.length; aTile++) {
-    for (let bTile = aTile; bTile < tilesetWithSets.length; bTile++) {
+  for (let aTile = 0; aTile < expandedTileset.length; aTile++) {
+    for (let bTile = aTile; bTile < expandedTileset.length; bTile++) {
       for (let way = 0; way < 4; way++) {
         const oppositeWay = (way + 2) % 4;
 
-        const baseTile = tilesetWithSets[aTile];
+        const baseTile = expandedTileset[aTile];
         const tileEdge = baseTile.edges[way];
 
-        const comparatorTile = tilesetWithSets[bTile];
+        const comparatorTile = expandedTileset[bTile];
         const comparatorEdge = reverseString(comparatorTile.edges[oppositeWay]);
 
         if (tileEdge === comparatorEdge) {
-          baseTile.validNeighbors[way].add(comparatorTile.path);
-          comparatorTile.validNeighbors[oppositeWay].add(baseTile.path);
+          tilesetWithSets[aTile].validNeighbors[way].add(comparatorTile.path);
+          tilesetWithSets[bTile].validNeighbors[oppositeWay].add(baseTile.path);
         }
       }
     }
@@ -51,15 +112,15 @@ interface CollapsedCell {
   tile: Tile;
 }
 export interface GridStep {
-  grid: TileWithValidNeighbors[][];
+  grid: Tile[][];
   collapsedCell: null | CollapsedCell;
 }
 let columns: number, rows: number;
-export function generateInitialHistory(gridColumns: number, gridRows: number) {
+export function getInitialHistory(gridColumns: number, gridRows: number) {
   columns = gridColumns;
   rows = gridRows;
 
-  let validTiles = [...tilesetWithNeighbors];
+  let validTiles = [...tileset];
   if (columns === 1) {
     validTiles = validTiles.filter((tile) =>
       tile.validNeighbors[1].has(tile.path)
@@ -72,21 +133,20 @@ export function generateInitialHistory(gridColumns: number, gridRows: number) {
     );
   }
 
-  const gridOptions = Array<TileWithValidNeighbors[]>(columns * rows).fill([
-    ...validTiles,
-  ]);
+  const gridOptions = Array<Tile[]>(columns * rows).fill([...validTiles]);
   const initialHistory: GridStep[] = [
     {
       grid: gridOptions,
       collapsedCell: null,
     },
   ];
+
   return initialHistory;
 }
 
 interface CellData {
   index: number;
-  options: TileWithValidNeighbors[];
+  options: Tile[];
 }
 export function collapseCellWithLeastEntropy(history: GridStep[]) {
   const grid = history[history.length - 1].grid;
@@ -133,10 +193,7 @@ interface PropagationStep {
   path: number;
   neighbors: (number | null)[];
 }
-function propagateEntropy(
-  grid: TileWithValidNeighbors[][],
-  selectedCellIndex: number
-) {
+function propagateEntropy(grid: Tile[][], selectedCellIndex: number) {
   const propagationStack: PropagationStep[] = [];
   pushToPropagationStack(selectedCellIndex, propagationStack, grid);
 

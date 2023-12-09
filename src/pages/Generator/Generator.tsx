@@ -2,7 +2,8 @@ import { useLayoutEffect, useState } from "react";
 import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
 import GeneratorControls from "@/components/GeneratorControls";
 import Mosaic from "@/components/Mosaic";
-import { generateInitialHistory } from "@/wfc-core";
+import { getTileset, getInitialHistory } from "@/wfc-core";
+import type { Tile } from "@/wfc-core";
 import styles from "./Generator.module.scss";
 
 export type ReturnOfGeneratorLoader = Awaited<ReturnType<typeof loader>>;
@@ -39,6 +40,7 @@ export function Generator() {
   );
 }
 
+let tileset: Tile[];
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const rowsParam = url.searchParams.get("rows");
@@ -58,7 +60,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw new Error("rows and columns should be integers between 1 and 30");
   }
 
-  const initialHistory = generateInitialHistory(columns, rows);
+  if (!tileset) {
+    tileset = await getTileset();
+  }
+  const initialHistory = getInitialHistory(columns, rows);
 
   return { columns, rows, initialHistory };
 }
