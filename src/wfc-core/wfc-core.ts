@@ -58,24 +58,23 @@ let columns: number, rows: number;
 export function generateInitialHistory(gridColumns: number, gridRows: number) {
   columns = gridColumns;
   rows = gridRows;
-  const gridOptions = Array(gridColumns * gridRows)
-    .fill(null)
-    .map(() => [...tilesetWithNeighbors]);
 
-  gridOptions.forEach((_, cellIndex) => {
-    getNeighborsIndexes(cellIndex).forEach((neighborIndex, neighborWay) => {
-      if (cellIndex !== neighborIndex) return;
+  let validTiles = [...tilesetWithNeighbors];
+  if (columns === 1) {
+    validTiles = validTiles.filter((tile) =>
+      tile.validNeighbors[1].has(tile.path)
+    );
+  }
 
-      const validTiles: TileWithValidNeighbors[] = [];
-      gridOptions[cellIndex].forEach((tile) => {
-        if (tile.validNeighbors[neighborWay].has(tile.path)) {
-          validTiles.push(tile);
-        }
-      });
-      gridOptions[cellIndex] = validTiles;
-    });
-  });
+  if (rows === 1) {
+    validTiles = validTiles.filter((tile) =>
+      tile.validNeighbors[0].has(tile.path)
+    );
+  }
 
+  const gridOptions = Array<TileWithValidNeighbors[]>(columns * rows).fill([
+    ...validTiles,
+  ]);
   const initialHistory: GridStep[] = [
     {
       grid: gridOptions,
