@@ -59,11 +59,6 @@ const baseTileset: BaseTile[] = [
     timesCanBeRotated: [1, 2, 3],
   },
   {
-    path: tilesMod["./turn.png"],
-    edges: ["ABA", "ABA", "AAA", "AAA"],
-    timesCanBeRotated: [1, 2, 3],
-  },
-  {
     path: tilesMod["./viad.png"],
     edges: ["AAA", "ABA", "AAA", "ABA"],
     timesCanBeRotated: [1],
