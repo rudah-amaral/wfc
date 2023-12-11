@@ -37,9 +37,9 @@ async function expandTileset(tileset: BaseTile[]) {
     const timesCanBeRotated = rotationableTile.timesCanBeRotated!;
 
     let rotatedTileEdges = rotationableTile.edges;
-    for (const timesRotated of timesCanBeRotated) {
+    for (let rotations = 1; rotations <= timesCanBeRotated; rotations++) {
       ctx.translate(tileWidth / 2, tileHeight / 2);
-      ctx.rotate((timesRotated * Math.PI) / 2);
+      ctx.rotate((rotations * Math.PI) / 2);
       ctx.translate(-tileWidth / 2, -tileHeight / 2);
       ctx.drawImage(rotationableTileImg, 0, 0, tileWidth, tileHeight);
       const rotatedTilePath = canvas.toDataURL();
