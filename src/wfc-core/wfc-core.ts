@@ -239,21 +239,25 @@ interface CellData {
 export function collapseCellWithLeastEntropy(history: GridStep[]) {
   const grid = history[history.length - 1].grid;
 
-  let leastOptions = tileset.length;
-  grid.forEach((tileOptions) => {
-    if (tileOptions.length > 1 && tileOptions.length < leastOptions) {
-      leastOptions = tileOptions.length;
-    }
-  });
+  const cellsNotCollapsed = grid.reduce<CellData[]>((acc, options, index) => {
+    if (options.length > 1) acc.push({ options, index });
+    return acc;
+  }, []);
 
-  const cellsLeastOptions: CellData[] = [];
-  grid.forEach((tileOptions, index) => {
-    if (tileOptions.length === leastOptions) {
-      cellsLeastOptions.push({ index, options: tileOptions });
-    }
-  });
+  if (cellsNotCollapsed.length === 0) return;
 
-  if (cellsLeastOptions.length === 0) return;
+  let cellsLeastOptions: CellData[] = [];
+  let leastOptions = cellsNotCollapsed[0].options.length;
+  for (const cellNotCollapsed of cellsNotCollapsed) {
+    const { options } = cellNotCollapsed;
+
+    if (options.length === leastOptions) {
+      cellsLeastOptions.push(cellNotCollapsed);
+    } else if (options.length < leastOptions) {
+      cellsLeastOptions = [cellNotCollapsed];
+      leastOptions = cellNotCollapsed.options.length;
+    }
+  }
 
   const randomCell = Math.floor(Math.random() * cellsLeastOptions.length);
   const selectedCell = cellsLeastOptions[randomCell];
