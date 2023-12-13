@@ -8,6 +8,7 @@ export interface BaseTile {
   path: string;
   edges: string[];
   timesCanBeRotated?: number;
+  weight?: number;
 }
 
 const baseTileset: BaseTile[] = [
@@ -21,71 +22,83 @@ const baseTileset: BaseTile[] = [
     name: "component",
     path: tilesMod["./component.png"],
     edges: ["DDD", "DDD", "DDD", "DDD"],
+    weight: 20,
   },
   {
     name: "connection",
     path: tilesMod["./connection.png"],
     edges: ["ABA", "AAD", "DDD", "DAA"],
     timesCanBeRotated: 3,
+    weight: 10,
   },
   {
     name: "corner",
     path: tilesMod["./corner.png"],
     edges: ["AAA", "AAA", "AAD", "DAA"],
     timesCanBeRotated: 3,
+    weight: 10,
   },
   {
     name: "dskew",
     path: tilesMod["./dskew.png"],
     edges: ["ABA", "ABA", "ABA", "ABA"],
     timesCanBeRotated: 1,
+    weight: 2,
   },
   {
     name: "skew",
     path: tilesMod["./skew.png"],
     edges: ["ABA", "ABA", "AAA", "AAA"],
     timesCanBeRotated: 3,
+    weight: 2,
   },
   {
     name: "substrate",
     path: tilesMod["./substrate.png"],
     edges: ["AAA", "AAA", "AAA", "AAA"],
+    weight: 2,
   },
   {
     name: "t",
     path: tilesMod["./t.png"],
     edges: ["AAA", "ABA", "ABA", "ABA"],
     timesCanBeRotated: 3,
+    weight: 0.1,
   },
   {
     name: "track",
     path: tilesMod["./track.png"],
     edges: ["ABA", "AAA", "ABA", "AAA"],
     timesCanBeRotated: 1,
+    weight: 2,
   },
   {
     name: "transition",
     path: tilesMod["./transition.png"],
     edges: ["ACA", "AAA", "ABA", "AAA"],
     timesCanBeRotated: 3,
+    weight: 0.4,
   },
   {
     name: "viad",
     path: tilesMod["./viad.png"],
     edges: ["AAA", "ABA", "AAA", "ABA"],
     timesCanBeRotated: 1,
+    weight: 0.1,
   },
   {
     name: "vias",
     path: tilesMod["./vias.png"],
     edges: ["ABA", "AAA", "AAA", "AAA"],
     timesCanBeRotated: 3,
+    weight: 0.3,
   },
   {
     name: "wire",
     path: tilesMod["./wire.png"],
     edges: ["AAA", "ACA", "AAA", "ACA"],
     timesCanBeRotated: 1,
+    weight: 0.5,
   },
 ];
 

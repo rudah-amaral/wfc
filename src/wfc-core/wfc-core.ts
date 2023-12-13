@@ -78,7 +78,7 @@ function rotateTileName(tileName: string, rotations: number) {
   return `${baseTileName} ${newRotation}`;
 }
 
-type ExpandedTile = Omit<BaseTile, "timesCanBeRotated">;
+type ExpandedTile = Required<Omit<BaseTile, "timesCanBeRotated">>;
 export interface Tile extends Omit<ExpandedTile, "edges"> {
   validNeighbors: Set<string>[];
 }
@@ -110,6 +110,7 @@ async function expandTileset(tileset: BaseTile[]) {
       name: tile.name,
       path: tile.path,
       edges: tile.edges,
+      weight: tile.weight ?? 1,
     };
   });
   for (const rotationableTile of rotationableTiles) {
@@ -130,6 +131,7 @@ async function expandTileset(tileset: BaseTile[]) {
         name: `${rotationableTile.name} ${rotations}`,
         path: rotatedTilePath,
         edges: rotatedTileEdges,
+        weight: rotationableTile.weight ?? 1,
       });
 
       ctx.resetTransform();
@@ -152,6 +154,7 @@ function calculateValidNeighbors(expandedTileset: ExpandedTile[]) {
     return {
       name: tile.name,
       path: tile.path,
+      weight: tile.weight,
       validNeighbors: [
         new Set<string>(),
         new Set<string>(),
@@ -246,24 +249,24 @@ export function collapseCellWithLeastEntropy(history: GridStep[]) {
 
   if (cellsNotCollapsed.length === 0) return;
 
-  let cellsLeastOptions: CellData[] = [];
-  let leastOptions = cellsNotCollapsed[0].options.length;
+  let cellsLeastEntropy: CellData[] = [];
+  let leastEntropy = getCellEntropy(grid[cellsNotCollapsed[0].index]);
   for (const cellNotCollapsed of cellsNotCollapsed) {
-    const { options } = cellNotCollapsed;
+    const cell = grid[cellNotCollapsed.index];
+    const cellEntropy = getCellEntropy(cell);
 
-    if (options.length === leastOptions) {
-      cellsLeastOptions.push(cellNotCollapsed);
-    } else if (options.length < leastOptions) {
-      cellsLeastOptions = [cellNotCollapsed];
-      leastOptions = cellNotCollapsed.options.length;
+    if (cellEntropy === leastEntropy) {
+      cellsLeastEntropy.push(cellNotCollapsed);
+    } else if (cellEntropy < leastEntropy) {
+      cellsLeastEntropy = [cellNotCollapsed];
+      leastEntropy = cellEntropy;
     }
   }
 
-  const randomCell = Math.floor(Math.random() * cellsLeastOptions.length);
-  const selectedCell = cellsLeastOptions[randomCell];
+  const randomCell = Math.floor(Math.random() * cellsLeastEntropy.length);
+  const selectedCell = cellsLeastEntropy[randomCell];
+  const selectedTile = collapseCell(selectedCell.options);
 
-  const randomTile = Math.floor(Math.random() * selectedCell.options.length);
-  const selectedTile = selectedCell.options[randomTile];
   let nextGrid = grid.slice();
   nextGrid[selectedCell.index] = [selectedTile];
   nextGrid = propagateEntropy(nextGrid, selectedCell.index);
@@ -279,6 +282,38 @@ export function collapseCellWithLeastEntropy(history: GridStep[]) {
     },
   ];
   return nextHistory;
+}
+
+export function getCellEntropy(cell: Tile[]) {
+  const sumOfWeights = cell.reduce((sumOfWeights, tile) => {
+    sumOfWeights += tile.weight;
+    return sumOfWeights;
+  }, 0);
+
+  const cellEntropy =
+    cell.reduce((summation, tile) => {
+      const tileProbability = tile.weight / sumOfWeights;
+      const log2TileProbability = Math.log2(tileProbability);
+      return summation + tileProbability * log2TileProbability;
+    }, 0) * -1;
+
+  // Scale it down between 0 and 1
+  return cellEntropy / Math.log2(cell.length);
+}
+
+function collapseCell(cell: Tile[]) {
+  const weights = [cell[0].weight];
+  for (let i = 1; i < cell.length; i++) {
+    weights[i] = cell[i].weight + weights[i - 1];
+  }
+
+  const random = Math.random() * weights[weights.length - 1];
+  let weightIndex;
+  for (weightIndex = 0; weightIndex < weights.length; weightIndex++) {
+    if (weights[weightIndex] > random) break;
+  }
+
+  return cell[weightIndex];
 }
 
 interface PropagationStep {

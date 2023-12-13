@@ -1,6 +1,7 @@
 import Tile from "@/components/Tile";
 import styles from "./Grid.module.scss";
 import { useLoaderData } from "react-router-dom";
+import { getCellEntropy } from "@/wfc-core";
 import type { Tile as TileData } from "@/wfc-core";
 import type { ReturnOfGeneratorLoader } from "@/pages/Generator";
 import { useEffect, useRef } from "react";
@@ -23,12 +24,17 @@ export default function Grid({ grid, mosaicStatus }: GridProps) {
       gridArea: `${rowStart} / ${colStart} / ${rowEnd} / ${colEnd}`,
     };
 
+    let cellEntropy = getCellEntropy(tileOptions).toFixed(3);
+    cellEntropy.substring(0, 1) === "1"
+      ? (cellEntropy = cellEntropy.substring(0, 1))
+      : (cellEntropy = cellEntropy.substring(1));
+
     return (
       <span style={cellStyle} className={styles.cell} key={index}>
         {tileOptions.length === 1 ? (
           <Tile path={tileOptions[0].path} />
         ) : (
-          tileOptions.length
+          cellEntropy
         )}
       </span>
     );
