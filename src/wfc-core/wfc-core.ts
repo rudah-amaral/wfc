@@ -176,9 +176,7 @@ function pushToPropagationStack(
       const neighborIsInCurrentPath = propagationStack.some((stackItem) => {
         return stackItem.path === cellIndex;
       });
-      const neighborAlreadyCollapsed = grid[neighborIndex].length <= 1;
-
-      if (neighborIsInCurrentPath || neighborAlreadyCollapsed) return null;
+      if (neighborIsInCurrentPath) return null;
       return neighborIndex;
     }
   );
