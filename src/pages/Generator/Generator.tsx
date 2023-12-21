@@ -41,14 +41,15 @@ export function Generator() {
   );
 }
 
-let tileset: Tile[];
+const tileset: Record<string, Tile[]> = {};
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const rowsParam = url.searchParams.get("rows");
   const columnsParam = url.searchParams.get("columns");
+  const tilesetName = url.searchParams.get("tileset");
 
-  if (rowsParam === null || columnsParam === null) {
-    throw redirect("?columns=10&rows=5");
+  if (rowsParam === null || columnsParam === null || tilesetName === null) {
+    throw redirect("?tileset=circuit&columns=10&rows=5");
   }
 
   const columns = Number(columnsParam);
@@ -61,10 +62,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw new Error("rows and columns should be integers between 1 and 30");
   }
 
-  if (!tileset) {
-    tileset = await getTileset();
+  if (!tileset[tilesetName]) {
+    tileset[tilesetName] = await getTileset(tilesetName);
   }
-  const initialHistory = getInitialHistory(columns, rows, tileset);
+  const initialHistory = getInitialHistory(columns, rows, tileset[tilesetName]);
 
   return { columns, rows, initialHistory };
 }

@@ -1,4 +1,3 @@
-import { baseTileset, blacklist } from "@/tilesets/circuit";
 import type { BaseTile, BlacklistedPair } from "@/tilesets/circuit";
 
 type ExpandedTile = Required<Omit<BaseTile, "timesCanBeRotated">>;
@@ -7,9 +6,10 @@ export interface Tile extends Omit<ExpandedTile, "edges"> {
 }
 let tileset: Tile[];
 let fullBlacklist: FullBlacklist;
-export async function getTileset() {
+export async function getTileset(tilesetName: string) {
+  const { baseTileset, blacklist } = await import(`./${tilesetName}/index.ts`);
   const expandedTileset = await expandTileset(baseTileset);
-  fullBlacklist = getFullBlacklist(blacklist);
+  fullBlacklist = getFullBlacklist(baseTileset, blacklist);
   tileset = calculateValidNeighbors(expandedTileset);
   return tileset;
 }
@@ -18,7 +18,10 @@ type FullBlacklist = Record<
   string,
   [Set<string>, Set<string>, Set<string>, Set<string>]
 >;
-function getFullBlacklist(baseBlacklist: BlacklistedPair[]): FullBlacklist {
+function getFullBlacklist(
+  tileset: BaseTile[],
+  baseBlacklist: BlacklistedPair[]
+): FullBlacklist {
   const fullBlacklist: FullBlacklist = {};
 
   // Each rule in the base blacklist should be representend in all its four
@@ -30,8 +33,8 @@ function getFullBlacklist(baseBlacklist: BlacklistedPair[]): FullBlacklist {
   // dskew 1 BT skew 0
   baseBlacklist.forEach(({ left: tileA, right: tileB }) => {
     for (let side = 0; side < 4; side++) {
-      const rotatedTileA = rotateTileName(baseTileset, tileA, side);
-      const rotatedTileB = rotateTileName(baseTileset, tileB, side);
+      const rotatedTileA = rotateTileName(tileset, tileA, side);
+      const rotatedTileB = rotateTileName(tileset, tileB, side);
 
       if (!fullBlacklist[rotatedTileA]) {
         fullBlacklist[rotatedTileA] = [
