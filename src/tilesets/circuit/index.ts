@@ -7,7 +7,7 @@ export interface BaseTile {
   name: string;
   path: string;
   edges: string[];
-  timesCanBeRotated?: number;
+  timesCanBeRotated?: 1 | 3;
   weight?: number;
 }
 

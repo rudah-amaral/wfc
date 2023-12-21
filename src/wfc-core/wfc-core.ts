@@ -1,5 +1,5 @@
-import { baseTileset, blacklist } from "@/circuit-tileset/tileset";
-import type { BaseTile, BlacklistedPair } from "@/circuit-tileset/tileset";
+import { baseTileset, blacklist } from "@/tilesets/circuit";
+import type { BaseTile, BlacklistedPair } from "@/tilesets/circuit";
 
 type FullBlacklist = Record<
   string,
