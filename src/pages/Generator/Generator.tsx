@@ -2,8 +2,9 @@ import { useLayoutEffect, useState } from "react";
 import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
 import GeneratorControls from "@/components/GeneratorControls";
 import Mosaic from "@/components/Mosaic";
-import { getTileset, getInitialHistory } from "@/wfc-core";
-import type { Tile } from "@/wfc-core";
+import { getInitialHistory } from "@/wfc-core";
+import { getTileset } from "@/tilesets";
+import type { Tile } from "@/tilesets";
 import styles from "./Generator.module.scss";
 
 export type ReturnOfGeneratorLoader = Awaited<ReturnType<typeof loader>>;
@@ -63,7 +64,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!tileset) {
     tileset = await getTileset();
   }
-  const initialHistory = getInitialHistory(columns, rows);
+  const initialHistory = getInitialHistory(columns, rows, tileset);
 
   return { columns, rows, initialHistory };
 }

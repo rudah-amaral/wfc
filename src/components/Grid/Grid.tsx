@@ -2,7 +2,7 @@ import Tile from "@/components/Tile";
 import styles from "./Grid.module.scss";
 import { useLoaderData } from "react-router-dom";
 import { getCellEntropy } from "@/wfc-core";
-import type { Tile as TileData } from "@/wfc-core";
+import type { Tile as TileData } from "@/tilesets";
 import type { ReturnOfGeneratorLoader } from "@/pages/Generator";
 import { useEffect, useRef } from "react";
 
