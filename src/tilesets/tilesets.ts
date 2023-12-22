@@ -11,14 +11,20 @@ export type BlacklistedPair = {
   right: string;
 };
 
-type ExpandedTile = Required<Omit<BaseTile, "timesCanBeRotated">>;
+interface tilesetImport {
+  blacklist: BlacklistedPair[];
+  baseTileset: BaseTile[];
+}
 export interface Tile extends Omit<ExpandedTile, "edges"> {
   validNeighbors: Set<string>[];
 }
 let tileset: Tile[];
 let fullBlacklist: FullBlacklist;
 export async function getTileset(tilesetName: string) {
-  const { baseTileset, blacklist } = await import(`./${tilesetName}/index.ts`);
+  const mod: tilesetImport = await import(`./${tilesetName}/index.ts`);
+  let { blacklist } = mod;
+  const { baseTileset } = mod;
+  if (blacklist === undefined) blacklist = [];
   const expandedTileset = await expandTileset(baseTileset);
   fullBlacklist = getFullBlacklist(baseTileset, blacklist);
   tileset = calculateValidNeighbors(expandedTileset);
@@ -109,6 +115,7 @@ function rotateTileName(
   return `${baseTileName} ${newRotation}`;
 }
 
+type ExpandedTile = Required<Omit<BaseTile, "timesCanBeRotated">>;
 async function expandTileset(tileset: BaseTile[]) {
   const rotationableTiles = tileset.filter((tile) => tile.timesCanBeRotated);
   const tileImg = await loadTileImg(tileset[0].path);
