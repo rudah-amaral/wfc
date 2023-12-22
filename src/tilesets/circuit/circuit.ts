@@ -1,15 +1,9 @@
+import type { BaseTile, BlacklistedPair } from "@/tilesets";
+
 const tilesMod = import.meta.glob<string>("./*.png", {
   import: "default",
   eager: true,
 });
-
-export interface BaseTile {
-  name: string;
-  path: string;
-  edges: string[];
-  timesCanBeRotated?: 1 | 3;
-  weight?: number;
-}
 
 const baseTileset: BaseTile[] = [
   {
@@ -102,10 +96,6 @@ const baseTileset: BaseTile[] = [
   },
 ];
 
-export type BlacklistedPair = {
-  left: string;
-  right: string;
-};
 const blacklist: BlacklistedPair[] = [
   { left: "connection 1", right: "connection 3" },
   { left: "connection 1", right: "transition 1" },

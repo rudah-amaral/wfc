@@ -1,4 +1,15 @@
-import type { BaseTile, BlacklistedPair } from "@/tilesets/circuit";
+export interface BaseTile {
+  name: string;
+  path: string;
+  edges: string[];
+  timesCanBeRotated?: 1 | 3;
+  weight?: number;
+}
+
+export type BlacklistedPair = {
+  left: string;
+  right: string;
+};
 
 type ExpandedTile = Required<Omit<BaseTile, "timesCanBeRotated">>;
 export interface Tile extends Omit<ExpandedTile, "edges"> {
