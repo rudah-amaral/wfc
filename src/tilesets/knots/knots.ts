@@ -1,9 +1,15 @@
-import type { BaseTile } from "@/tilesets";
+import type { BaseTile, TilesetMetaData } from "@/tilesets";
 
 const tilesMod = import.meta.glob<string>("./*.png", {
   import: "default",
   eager: true,
 });
+
+export const tilesetData: TilesetMetaData = {
+  name: "knots",
+  designerName: "Maxin Gumin",
+  designerSocial: "https://twitter.com/exutumno",
+};
 
 const baseTileset: BaseTile[] = [
   {

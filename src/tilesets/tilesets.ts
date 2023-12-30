@@ -11,6 +11,12 @@ export type BlacklistedPair = {
   right: string;
 };
 
+export interface TilesetMetaData {
+  name: string;
+  designerName: string;
+  designerSocial: string;
+}
+
 interface tilesetImport {
   blacklist: BlacklistedPair[];
   baseTileset: BaseTile[];

@@ -1,1 +1,1 @@
-export { baseTileset } from "./knots";
+export { baseTileset, tilesetData } from "./knots";

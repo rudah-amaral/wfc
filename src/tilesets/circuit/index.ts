@@ -1,1 +1,1 @@
-export { baseTileset, blacklist } from "./circuit";
+export { baseTileset, blacklist, tilesetData } from "./circuit";

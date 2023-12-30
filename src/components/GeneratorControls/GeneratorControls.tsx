@@ -1,6 +1,7 @@
 import DimensionsButtons from "@/components/DimensionsButtons";
 import GenerateButton from "@/components/GenerateButton";
 import { GridStep } from "@/wfc-core";
+import TilesetControls from "../TilesetControls";
 import styles from "./GeneratorControls.module.scss";
 
 interface GeneratorControlsProps {
@@ -18,6 +19,7 @@ export default function GeneratorControls({
 }: GeneratorControlsProps) {
   return (
     <div className={styles.controlsWrapper}>
+      <TilesetControls disabled={mosaicStatus === "generating"} />
       <DimensionsButtons disabled={mosaicStatus === "generating"} />
       <GenerateButton
         mosaicStatus={mosaicStatus}
