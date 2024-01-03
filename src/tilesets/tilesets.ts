@@ -6,10 +6,10 @@ export interface BaseTile {
   weight?: number;
 }
 
-export type BlacklistedPair = {
+export interface BlacklistedPair {
   left: string;
   right: string;
-};
+}
 
 export interface TilesetMetaData {
   name: string;
