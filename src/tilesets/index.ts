@@ -2,6 +2,6 @@ export { getTileset } from "./tilesets";
 export type {
   Tile,
   BaseTile,
-  BlacklistedPair,
+  WhitelistedPair,
   TilesetMetaData,
 } from "./tilesets";

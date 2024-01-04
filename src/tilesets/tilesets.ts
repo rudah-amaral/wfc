@@ -1,12 +1,11 @@
 export interface BaseTile {
   name: string;
   path: string;
-  edges: string[];
   timesCanBeRotated?: 1 | 3;
   weight?: number;
 }
 
-export interface BlacklistedPair {
+export interface WhitelistedPair {
   left: string;
   right: string;
 }
@@ -18,21 +17,20 @@ export interface TilesetMetaData {
 }
 
 interface tilesetImport {
-  blacklist: BlacklistedPair[];
+  baseWhitelist: WhitelistedPair[];
   baseTileset: BaseTile[];
 }
 export interface Tile extends Omit<ExpandedTile, "edges"> {
   validNeighbors: Set<string>[];
 }
 let tileset: Tile[];
-let fullBlacklist: FullBlacklist;
+let fullWhitelist: FullBlacklist;
 export async function getTileset(tilesetName: string) {
-  const mod: tilesetImport = await import(`./${tilesetName}/index.ts`);
-  let { blacklist } = mod;
-  const { baseTileset } = mod;
-  if (blacklist === undefined) blacklist = [];
+  const { baseTileset, baseWhitelist }: tilesetImport = await import(
+    `./${tilesetName}/index.ts`
+  );
   const expandedTileset = await expandTileset(baseTileset);
-  fullBlacklist = getFullBlacklist(baseTileset, blacklist);
+  fullWhitelist = getFullWhitelist(baseTileset, baseWhitelist);
   tileset = calculateValidNeighbors(expandedTileset);
   return tileset;
 }
@@ -41,34 +39,34 @@ type FullBlacklist = Record<
   string,
   [Set<string>, Set<string>, Set<string>, Set<string>]
 >;
-function getFullBlacklist(
-  tileset: BaseTile[],
-  baseBlacklist: BlacklistedPair[]
+function getFullWhitelist(
+  baseTileset: BaseTile[],
+  baseWhitelist: WhitelistedPair[]
 ): FullBlacklist {
-  const fullBlacklist: FullBlacklist = {};
+  const fullWhitelist: FullBlacklist = {};
 
-  // Each rule in the base blacklist should be representend in all its four
+  // Each rule in the base whitelist should be representend in all its four
   // rotations, e.g.:
   //
   // dskew   LR skew 1
   // dskew 1 TB skew 2
   // dskew   RL skew 3
   // dskew 1 BT skew 0
-  baseBlacklist.forEach(({ left: tileA, right: tileB }) => {
+  baseWhitelist.forEach(({ left: tileA, right: tileB }) => {
     for (let side = 0; side < 4; side++) {
-      const rotatedTileA = rotateTileName(tileset, tileA, side);
-      const rotatedTileB = rotateTileName(tileset, tileB, side);
+      const rotatedTileA = rotateTileName(baseTileset, tileA, side);
+      const rotatedTileB = rotateTileName(baseTileset, tileB, side);
 
-      if (!fullBlacklist[rotatedTileA]) {
-        fullBlacklist[rotatedTileA] = [
+      if (!fullWhitelist[rotatedTileA]) {
+        fullWhitelist[rotatedTileA] = [
           new Set<string>(),
           new Set<string>(),
           new Set<string>(),
           new Set<string>(),
         ];
       }
-      if (!fullBlacklist[rotatedTileB]) {
-        fullBlacklist[rotatedTileB] = [
+      if (!fullWhitelist[rotatedTileB]) {
+        fullWhitelist[rotatedTileB] = [
           new Set<string>(),
           new Set<string>(),
           new Set<string>(),
@@ -76,16 +74,16 @@ function getFullBlacklist(
         ];
       }
 
-      // Each rule in the blacklist should be represented in its direct form
+      // Each rule in the whitelist should be represented in its direct form
       // and in its inverted form, e.g.:
       //
       // dskew  LR skew 1
       // skew 1 RL dskew
-      fullBlacklist[rotatedTileA][(1 + side) % 4].add(rotatedTileB);
-      fullBlacklist[rotatedTileB][(3 + side) % 4].add(rotatedTileA);
+      fullWhitelist[rotatedTileA][(1 + side) % 4].add(rotatedTileB);
+      fullWhitelist[rotatedTileB][(3 + side) % 4].add(rotatedTileA);
     }
   });
-  return fullBlacklist;
+  return fullWhitelist;
 }
 
 const timesCanBeRotated: Record<string, number> = {};
@@ -140,7 +138,6 @@ async function expandTileset(tileset: BaseTile[]) {
     return {
       name: tile.name,
       path: tile.path,
-      edges: tile.edges,
       weight: tile.weight ?? 1,
     };
   });
@@ -148,20 +145,16 @@ async function expandTileset(tileset: BaseTile[]) {
     const rotationableTileImg = await loadTileImg(rotationableTile.path);
     const timesCanBeRotated = rotationableTile.timesCanBeRotated!;
 
-    let rotatedTileEdges = rotationableTile.edges;
     for (let rotations = 1; rotations <= timesCanBeRotated; rotations++) {
       ctx.translate(tileWidth / 2, tileHeight / 2);
-      ctx.rotate((rotations * Math.PI) / 2);
+      ctx.rotate((rotations * -Math.PI) / 2);
       ctx.translate(-tileWidth / 2, -tileHeight / 2);
       ctx.drawImage(rotationableTileImg, 0, 0, tileWidth, tileHeight);
       const rotatedTilePath = canvas.toDataURL();
-      rotatedTileEdges = [...rotatedTileEdges];
-      rotatedTileEdges.unshift(rotatedTileEdges.pop()!);
 
       expandedTileset.push({
         name: `${rotationableTile.name} ${rotations}`,
         path: rotatedTilePath,
-        edges: rotatedTileEdges,
         weight: rotationableTile.weight ?? 1,
       });
 
@@ -201,18 +194,12 @@ function calculateValidNeighbors(expandedTileset: ExpandedTile[]) {
         const oppositeWay = (way + 2) % 4;
 
         const baseTile = expandedTileset[aTile];
-        const tileEdge = baseTile.edges[way];
-
         const comparatorTile = expandedTileset[bTile];
-        const comparatorEdge = reverseString(comparatorTile.edges[oppositeWay]);
 
         if (
-          fullBlacklist[baseTile.name] &&
-          fullBlacklist[baseTile.name][way].has(comparatorTile.name)
-        )
-          continue;
-
-        if (tileEdge === comparatorEdge) {
+          fullWhitelist[baseTile.name] &&
+          fullWhitelist[baseTile.name][way].has(comparatorTile.name)
+        ) {
           tilesetWithSets[aTile].validNeighbors[way].add(comparatorTile.path);
           tilesetWithSets[bTile].validNeighbors[oppositeWay].add(baseTile.path);
         }
@@ -221,10 +208,4 @@ function calculateValidNeighbors(expandedTileset: ExpandedTile[]) {
   }
 
   return tilesetWithSets;
-}
-
-function reverseString(string: string) {
-  const stringArray = string.split("");
-  stringArray.reverse();
-  return stringArray.join("");
 }

@@ -192,7 +192,7 @@ function getNeighborsIndexes(cellIndex: number) {
   const bottomIndex = (cellIndex + columns) % tilesAmount;
   const topIndex = (cellIndex - columns + tilesAmount) % tilesAmount;
 
-  return [topIndex, rightIndex, bottomIndex, leftIndex];
+  return [bottomIndex, rightIndex, topIndex, leftIndex];
 }
 
 export function undoLastGuess(history: GridStep[]) {
