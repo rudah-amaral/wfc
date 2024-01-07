@@ -17,3 +17,12 @@ documentations I've watched [The Coding Train's Coding Challenge
 projects ideas to practice with those technologies, and something that relied on
 a lot of differente states and was very visual seemed like a tight fit with
 React, thus this project came to be.
+
+## Acknowledgments
+
+All tilesets used in this website were made by kind people who granted me
+permission to use them. Without them I&apos;d have to make all used tilesets by
+myself and they wouldn&apos;t be half as good. Thanks y&apos;all!
+
+- Maxim Gumin: Made the Castle, Circuit, Rooms and Knots tilesets.
+- Mario Klingemann: Made the Circles tileset.

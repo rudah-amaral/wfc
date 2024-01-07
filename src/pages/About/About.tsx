@@ -69,6 +69,13 @@ export default function About() {
         </li>
         <li className={styles.listItem}>
           <h3 className={styles.itemTitle}>
+            <NavLink to="inspirations" className={styles.listLink}>
+              Inspirations
+            </NavLink>
+          </h3>
+        </li>
+        <li className={styles.listItem}>
+          <h3 className={styles.itemTitle}>
             <NavLink to="the-tech" className={styles.listLink}>
               Technologies Used
             </NavLink>

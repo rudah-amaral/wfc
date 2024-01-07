@@ -18,6 +18,7 @@ import {
   AboutWhatIsMissing,
   AboutMe,
   AboutTheTech,
+  AboutInspirations,
 } from "@/pages/About";
 
 const router = createHashRouter(
@@ -33,6 +34,7 @@ const router = createHashRouter(
       <Route path="about" element={<About />}>
         <Route index element={<AboutIndex />} />
         <Route path="acknowledgments" element={<AboutAcknowledgments />} />
+        <Route path="inspirations" element={<AboutInspirations />} />
         <Route path="the-tech" element={<AboutTheTech />} />
         <Route path="what-is-missing" element={<AboutWhatIsMissing />} />
         <Route path="me" element={<AboutMe />} />
