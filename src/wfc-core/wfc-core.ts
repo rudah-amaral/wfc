@@ -8,7 +8,7 @@ export interface GridStep {
   grid: Tile[][];
   collapsedCell: null | CollapsedCell;
 }
-let columns: number, rows: number;
+let columns: number, rows: number, validTiles: Tile[];
 export function getInitialHistory(
   gridColumns: number,
   gridRows: number,
@@ -17,7 +17,7 @@ export function getInitialHistory(
   columns = gridColumns;
   rows = gridRows;
 
-  let validTiles = [...tileset];
+  validTiles = [...tileset];
   if (columns === 1) {
     validTiles = validTiles.filter((tile) =>
       tile.validNeighbors[1].has(tile.path)
@@ -91,7 +91,7 @@ export function collapseCellWithLeastEntropy(history: GridStep[]) {
 }
 
 export function getCellEntropy(cell: Tile[]) {
-  const sumOfWeights = cell.reduce((sumOfWeights, tile) => {
+  const sumOfWeights = validTiles.reduce((sumOfWeights, tile) => {
     sumOfWeights += tile.weight;
     return sumOfWeights;
   }, 0);
@@ -104,7 +104,7 @@ export function getCellEntropy(cell: Tile[]) {
     }, 0) * -1;
 
   // Scale it down between 0 and 1
-  return cellEntropy / Math.log2(cell.length);
+  return cellEntropy / Math.log2(validTiles.length);
 }
 
 function collapseCell(cell: Tile[]) {
